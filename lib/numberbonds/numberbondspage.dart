@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:numberbonds/common/sizes.dart';
 import 'package:numberbonds/utils/systemutils.dart';
+import 'package:lottie/lottie.dart';
 
 class NumberBondsPage extends StatefulWidget {
   NumberBondsPage({Key key}) : super(key: key);
@@ -10,12 +12,12 @@ class NumberBondsPage extends StatefulWidget {
 }
 
 class _NumberBondsPageState extends State<NumberBondsPage> {
-  int _counter = 0;
+  int resultNumber = -1;
   double numberPadItemWidth;
 
-  void _incrementCounter() {
+  void _setResultNumber(int resultNumber) {
     setState(() {
-      _counter++;
+      this.resultNumber = resultNumber;
     });
   }
 
@@ -31,94 +33,118 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
       appBar: AppBar(
         title: Text('Numberbonds'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            buildEquation(context),
-            buildNumberPad(context)
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      body: buildBody(context),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Column(
+      verticalDirection: VerticalDirection.up,
+      children: <Widget>[
+        buildNumberPad(context),
+        buildEquation(context)
+        //SizedBox(height: 98),
+      ],
     );
   }
 
   Widget buildEquation(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      buildEquationNumber(context, "8"),
-      buildEquationNumber(context, "+"),
-      buildEquationNumber(context, "_"),
-      buildEquationNumber(context, "="),
-      buildEquationNumber(context, "10"),
-    ]);
+    String resultNumberFormatted = " ";
+    if (resultNumber != -1) {
+      resultNumberFormatted = resultNumber.toString();
+    }
+
+    return Expanded(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            buildEquationNumber(context, "8"),
+            buildEquationNumber(context, "+"),
+            buildNumberPadNumber(context, resultNumberFormatted),
+            buildEquationNumber(context, "="),
+            buildEquationNumber(context, "10"),
+          ]),
+              Visibility(
+                  visible: resultNumber == 3,
+                  replacement: SizedBox(height: 128,),
+                  child: SizedBox(
+                width: 128,
+                height: 128,
+                child: Lottie.asset('assets/check_lottie.json', repeat: false),
+              ))
+
+
+        ]));
   }
 
   Widget buildEquationNumber(BuildContext context, String number) {
-    return Text(
-      number,
-      style: Theme.of(context).textTheme.headline4,
+    return Container(
+      height: Sizes.ICON_MEDIUM,
+      width: Sizes.ICON_MEDIUM,
+      child: Text(
+        number,
+        textAlign: TextAlign.center,
+        style: Theme.of(context)
+            .textTheme
+            .headline4
+            .apply(color: Colors.grey.shade800),
+      ),
     );
   }
 
   Widget buildNumberPad(BuildContext context) {
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildNumberPadNumber(context, "1"),
-          buildNumberPadNumber(context, "2"),
-          buildNumberPadNumber(context, "3"),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildNumberPadNumber(context, '4'),
-          buildNumberPadNumber(context, '5'),
-          buildNumberPadNumber(context, '6'),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildNumberPadNumber(context, '7'),
-          buildNumberPadNumber(context, '8'),
-          buildNumberPadNumber(context, '9'),
-        ],
-      ),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildNumberPadNumber(context, "1"),
+            buildNumberPadNumber(context, "2"),
+            buildNumberPadNumber(context, "3"),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildNumberPadNumber(context, '4'),
+            buildNumberPadNumber(context, '5'),
+            buildNumberPadNumber(context, '6'),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildNumberPadNumber(context, '7'),
+            buildNumberPadNumber(context, '8'),
+            buildNumberPadNumber(context, '9'),
+          ],
+        ),
+      ]),
+    );
   }
 
   Widget buildNumberPadNumber(BuildContext context, String number) {
-    return 
-      Padding(padding: EdgeInsets.all(5), child: OutlinedButton(
-        onPressed: () {
-          // Respond to button press
-        },
-        style: ButtonStyle(
-          minimumSize: MaterialStateProperty.resolveWith((_) => Size(numberPadItemWidth, numberPadItemWidth)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(numberPadItemWidth / 2.0),
-                  side: BorderSide(color: Colors.red)
-              )
-          )
-        ),
-        child: Text(
-          number,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline4.apply(
-            color: Colors.grey.shade800
-          )
-        )));
+    return Padding(
+        padding: EdgeInsets.all(5),
+        child: OutlinedButton(
+            onPressed: () {
+              _setResultNumber(int.parse(number));
+            },
+            style: ButtonStyle(
+                minimumSize: MaterialStateProperty.resolveWith(
+                    (_) => Size(numberPadItemWidth, numberPadItemWidth)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(numberPadItemWidth / 2.0),
+                        side: BorderSide(color: Colors.red)))),
+            child: Text(number,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .apply(color: Colors.grey.shade800))));
   }
 }
