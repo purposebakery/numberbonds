@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/sizes.dart';
+import 'package:numberbonds/maths/numberbond.dart';
+import 'package:numberbonds/utils/dartutils.dart';
 import 'package:numberbonds/utils/systemutils.dart';
 import 'package:lottie/lottie.dart';
 
@@ -12,18 +14,56 @@ class NumberBondsPage extends StatefulWidget {
 }
 
 class _NumberBondsPageState extends State<NumberBondsPage> {
-  int resultNumber = -1;
-  double numberPadItemWidth;
+  static const int UNDEFINED = -1;
 
-  void _setResultNumber(int resultNumber) {
+  int secondInput;
+  double numberPadItemWidth;
+  NumberBond numberbond;
+  bool waitingForReset;
+
+  _NumberBondsPageState(){
+    initializeValues();
+  }
+
+  void initializeValues() {
+    this.secondInput = UNDEFINED;
+    this.numberbond = NumberBond.base10(); // TODO generate one different that current
+    this.waitingForReset = false;
+  }
+
+  void _reset() {
     setState(() {
-      this.resultNumber = resultNumber;
+      initializeValues();
     });
   }
 
+  void _setSecondInput(int secondInput) {
+    // Same input. Ignore.
+    if (this.secondInput == secondInput) {
+      return;
+    }
+
+    // We're waiting for a reset. Ignore
+    if (this.waitingForReset) {
+      return;
+    }
+
+    // Set the state
+    setState(() {
+      this.secondInput = secondInput;
+      if (this.numberbond.isSecond(secondInput)) {
+        this.waitingForReset = true;
+        DartUtils.delay(DartUtils.DURATION_2SEC, () {
+          _reset();
+        });
+      }
+    });
+  }
+
+
   void prebuild() {
-    double width = SystemUtils.getDisplayShortestSide(context);
-    numberPadItemWidth = width / 5.0;
+    //double width = SystemUtils.getDisplayShortestSide(context);
+    numberPadItemWidth = Sizes.ICON_LARGE;
   }
 
   @override
@@ -43,15 +83,14 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
       children: <Widget>[
         buildNumberPad(context),
         buildEquation(context)
-        //SizedBox(height: 98),
       ],
     );
   }
 
   Widget buildEquation(BuildContext context) {
     String resultNumberFormatted = " ";
-    if (resultNumber != -1) {
-      resultNumberFormatted = resultNumber.toString();
+    if (secondInput != UNDEFINED) {
+      resultNumberFormatted = secondInput.toString();
     }
 
     return Expanded(
@@ -59,18 +98,19 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            buildEquationNumber(context, "8"),
+            buildEquationNumber(context, "${numberbond.first}"),
             buildEquationNumber(context, "+"),
             buildNumberPadNumber(context, resultNumberFormatted),
             buildEquationNumber(context, "="),
-            buildEquationNumber(context, "10"),
+            buildEquationNumber(context, "${numberbond.result}"),
           ]),
               Visibility(
-                  visible: resultNumber == 3,
-                  replacement: SizedBox(height: 128,),
+                  visible: numberbond.isSecond(secondInput),
+                  replacement: SizedBox(height: Sizes.ICON_LARGE),
+                  maintainState: false,
                   child: SizedBox(
-                width: 128,
-                height: 128,
+                width: Sizes.ICON_LARGE,
+                height: Sizes.ICON_LARGE,
                 child: Lottie.asset('assets/check_lottie.json', repeat: false),
               ))
 
@@ -130,7 +170,7 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
         padding: EdgeInsets.all(5),
         child: OutlinedButton(
             onPressed: () {
-              _setResultNumber(int.parse(number));
+              _setSecondInput(int.parse(number));
             },
             style: ButtonStyle(
                 minimumSize: MaterialStateProperty.resolveWith(
@@ -140,11 +180,21 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
                         borderRadius:
                             BorderRadius.circular(numberPadItemWidth / 2.0),
                         side: BorderSide(color: Colors.red)))),
-            child: Text(number,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4
-                    .apply(color: Colors.grey.shade800))));
+            child: buildNumberField(context, number)
+        )
+    );
+  }
+
+  Widget buildNumberField(BuildContext context, String number){
+    return AnimatedSwitcher(
+        duration: DartUtils.DURATION_SHORT,
+        child: Text(number,
+            key: ValueKey<int>(number.hashCode),
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                .apply(color: Colors.grey.shade800))
+    );
   }
 }

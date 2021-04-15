@@ -7,4 +7,5 @@ class Sizes {
 
   static const double ICON_SMALL = 24;
   static const double ICON_MEDIUM = 48;
+  static const double ICON_LARGE = 96;
 }
