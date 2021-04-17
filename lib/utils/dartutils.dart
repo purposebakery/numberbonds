@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class DartUtils {
 
   static const int DURATION_SHORT_MILLIS = 150;
@@ -14,7 +16,7 @@ class DartUtils {
   static const Duration DURATION_2SEC = Duration(milliseconds: DURATION_1SEC_MILLIS * 2);
 
   static void delay(Duration duration, Function function) {
-    Future.delayed(duration, function);
+    Future.delayed(duration, function as FutureOr<dynamic> Function()?);
   }
 
   static void delayShort(Function function) {

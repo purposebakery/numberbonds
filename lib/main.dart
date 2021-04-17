@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:numberbonds/numberbonds/numberbondsPage.dart';
+import 'numberbonds/numberbondspage.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Numberbonds',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
           //fontFamily: 'Minecraftia'
       ),
       home: NumberBondsPage(),

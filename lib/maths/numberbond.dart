@@ -11,7 +11,7 @@ class NumberBond {
     second = result - first;
   }
 
-  bool isSecond(int second) {
+  bool isSecond(int? second) {
     return this.second == second;
   }
 }
