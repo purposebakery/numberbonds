@@ -1,16 +1,25 @@
 # numberbonds
 
-A new Flutter application.
+TODOS:
 
-## Getting Started
+- empty home page with numberbond start button
+- add database with statistics:
 
-This project is a starting point for a Flutter application.
+CompletedBonds
+Row: date, value1 (value1 <= value2), value2, result, errors
 
-A few resources to get you started if this is your first Flutter project:
+Statistics
+value1 (value1 <= value2), value2, completed, errors
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+1, 9
+2, 8
+3, 7
+4, 6
+5, 5
+6, 4
+7, 3
+8, 2
+9, 1
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Add daily goal to home page
+

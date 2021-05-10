@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
+import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/common/sizes.dart';
 import 'package:numberbonds/maths/numberbond.dart';
+import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/utils/dartutils.dart';
 
 class NumberBondsPage extends StatefulWidget {
@@ -12,7 +14,7 @@ class NumberBondsPage extends StatefulWidget {
   _NumberBondsPageState createState() => _NumberBondsPageState();
 }
 
-class _NumberBondsPageState extends State<NumberBondsPage> {
+class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   static const int UNDEFINED = -1;
 
   int? secondInput;
@@ -78,16 +80,28 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
   Widget buildBody(BuildContext context) {
     return Column(
       verticalDirection: VerticalDirection.up,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        buildStopButton(context),
         buildNumberPad(context),
         new Expanded(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
               buildEquation(context),
-              buildEquationCheckResponse(context),
+              buildEquationCheckResponse(),
             ])),
       ],
+    );
+  }
+
+  Widget buildStopButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: Sizes.SPACE3),
+      child: SGButtonRaised(
+        text : "Stop",
+        onPressed : () => { back(context) }
+      ),
     );
   }
 
@@ -106,7 +120,17 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
     ]);
   }
 
-  Widget buildEquationCheckResponse(BuildContext context) {
+  Widget buildEquationCheckResponse() {
+    bool visible = numberbond.isSecond(secondInput);
+    return AnimatedOpacity(
+      // If the widget is visible, animate to 0.0 (invisible).
+      // If the widget is hidden, animate to 1.0 (fully visible).
+      opacity: visible ? 1.0 : 0.0,
+      curve: Curves.decelerate,
+      duration: DartUtils.DURATION_MEDIUM,
+      child: buildEquationCheckResponseIcon(),
+    );
+    /*
     return Visibility(
         visible: numberbond.isSecond(secondInput),
         replacement: SizedBox(height: Sizes.ICON_LARGE),
@@ -114,8 +138,23 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
         child: SizedBox(
           width: Sizes.ICON_LARGE,
           height: Sizes.ICON_LARGE,
-          child: Lottie.asset('assets/check_lottie.json', repeat: false),
-        ));
+          child: Icon(
+            Icons.check,
+            color: Colors.green,
+            size: Sizes.ICON_LARGE,
+            semanticLabel: 'Text to announce in accessibility modes',
+          ),
+          //Lottie.asset('assets/check_lottie.json', repeat: false),
+        ));*/
+  }
+
+  Widget buildEquationCheckResponseIcon() {
+    return Icon(
+      Icons.check,
+      color: Colors.green,
+      size: Sizes.ICON_LARGE,
+      semanticLabel: 'Text to announce in accessibility modes',
+    );
   }
 
   Widget buildEquationNumber(BuildContext context, String number) {
@@ -185,6 +224,8 @@ class _NumberBondsPageState extends State<NumberBondsPage> {
             style: Theme.of(context)
                 .textTheme
                 .headline4!
-                .apply(color: Colors.grey.shade800)));
+                .apply(color: Colors.grey.shade800)
+        )
+    );
   }
 }
