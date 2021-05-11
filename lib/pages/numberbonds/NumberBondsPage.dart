@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
-import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
+import 'package:numberbonds/model/NumberBondResult.dart';
+import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
 
 class NumberBondsPage extends StatefulWidget {
@@ -27,8 +30,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void initializeValues() {
     this.secondInput = UNDEFINED;
-    this.numberbond =
-        NumberBond.base10(); // TODO generate one different that current
+    this.numberbond = NumberBond.base10(); // TODO generate one different that current
     this.waitingForReset = false;
   }
 
@@ -52,11 +54,18 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     // Set the state
     setState(() {
       if (this.numberbond.isSecond(secondInput)) {
+        // Right Answer
+        StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
+
         this.secondInput = secondInput;
         this.waitingForReset = true;
         DartUtils.delay(DartUtils.DURATION_2SEC, () {
           _reset();
         });
+      } else {
+        // Wrong answer
+        StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.WRONG);
+        _reset();
       }
     });
   }

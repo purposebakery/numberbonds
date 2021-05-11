@@ -14,4 +14,16 @@ class NumberBond {
   bool isSecond(int? second) {
     return this.second == second;
   }
+
+  String toString() {
+    return "$first,$second,$result";
+  }
+
+  NumberBond fromString(String string) {
+    List<String> values = string.split(',');
+    first = int.parse(values[0]);
+    second = int.parse(values[1]);
+    result = int.parse(values[2]);
+    return this;
+  }
 }
