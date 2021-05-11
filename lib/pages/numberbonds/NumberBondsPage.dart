@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
-import 'package:numberbonds/common/sizes.dart';
-import 'package:numberbonds/maths/numberbond.dart';
+import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
-import 'package:numberbonds/utils/dartutils.dart';
+import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/utils/DartUtils.dart';
 
 class NumberBondsPage extends StatefulWidget {
   NumberBondsPage({Key? key}) : super(key: key);
@@ -28,7 +27,8 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void initializeValues() {
     this.secondInput = UNDEFINED;
-    this.numberbond = NumberBond.base10(); // TODO generate one different that current
+    this.numberbond =
+        NumberBond.base10(); // TODO generate one different that current
     this.waitingForReset = false;
   }
 
@@ -98,10 +98,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   Widget buildStopButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: Sizes.SPACE3),
-      child: SGButtonRaised(
-        text : "Stop",
-        onPressed : () => { back(context) }
-      ),
+      child: SGButtonRaised(text: "Stop", onPressed: () => {back(context)}),
     );
   }
 
@@ -224,8 +221,6 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
             style: Theme.of(context)
                 .textTheme
                 .headline4!
-                .apply(color: Colors.grey.shade800)
-        )
-    );
+                .apply(color: Colors.grey.shade800)));
   }
 }

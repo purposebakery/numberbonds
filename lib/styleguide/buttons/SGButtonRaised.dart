@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:numberbonds/common/sizes.dart';
+
+import 'package:numberbonds/styleguide/constants/Sizes.dart';
 
 class SGButtonRaised extends StatelessWidget {
   final String text;

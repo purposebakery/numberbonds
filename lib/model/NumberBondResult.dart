@@ -1,0 +1,4 @@
+enum NumberBondResult {
+  CORRECT,
+  WRONG
+}

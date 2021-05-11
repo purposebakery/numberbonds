@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
-import 'package:numberbonds/common/sizes.dart';
-import 'package:numberbonds/maths/numberbond.dart';
-import 'package:numberbonds/numberbonds/numberbondspage.dart';
+import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
-import 'package:numberbonds/utils/dartutils.dart';
-import 'package:numberbonds/utils/navigationutils.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -40,7 +35,6 @@ class _HomePage extends BaseState<HomePage> {
           SGButtonRaised(
               text: "Start",
               onPressed: () => {to(context, () => NumberBondsPage())})
-        ]
-    );
+        ]);
   }
 }

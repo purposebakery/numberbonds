@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:numberbonds/home/homepage.dart';
+import 'package:numberbonds/pages/App.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Numberbonds',
-      theme: ThemeData(
-        primarySwatch: Colors.teal
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
