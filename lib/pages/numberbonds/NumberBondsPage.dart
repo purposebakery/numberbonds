@@ -4,9 +4,11 @@ import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
+import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/constants/Sizes.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
+import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
 
 class NumberBondsPage extends StatefulWidget {
@@ -24,6 +26,8 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   late NumberBond numberbond;
   late bool waitingForReset;
 
+  final ValueNotifier<double> goal = ValueNotifier<double>(0);
+
   _NumberBondsPageState() {
     initializeValues();
   }
@@ -32,6 +36,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     this.secondInput = UNDEFINED;
     this.numberbond = NumberBond.base10(); // TODO generate one different that current
     this.waitingForReset = false;
+    GoalStore.getGoalProgressPerunus().then((value) => this.goal.value = value);
   }
 
   void _reset() {
@@ -56,6 +61,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       if (this.numberbond.isSecond(secondInput)) {
         // Right Answer
         StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
+        GoalStore.addGoalProgress();
 
         this.secondInput = secondInput;
         this.waitingForReset = true;
@@ -97,6 +103,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+              buildGoalProgress(context),
               buildEquation(context),
               buildEquationCheckResponse(),
             ])),
@@ -104,10 +111,42 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     );
   }
 
+  /*
+  Widget buildGoalProgress(BuildContext context) {
+    return FutureBuilder<double>(
+        future: GoalStore.getGoalProgressPerunus(),
+        builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
+            return Padding(
+              padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
+              child: SGGoalProgress(progress: snapshot.data!),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
+              child: SGGoalProgress(progress: 0),
+            );
+          }
+        }
+    );
+  }*/
+
+  Widget buildGoalProgress(BuildContext context) {
+    return ValueListenableBuilder<double>(
+        builder: (BuildContext context, double value, Widget? child) {
+          return Padding(
+            padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
+            child: SGGoalProgress(progress: value),
+          );
+        },
+      valueListenable: this.goal,
+    );
+  }
+
   Widget buildStopButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: Sizes.SPACE3),
-      child: SGButtonRaised(text: "Stop", onPressed: () => {back(context)}),
+      padding: const EdgeInsets.only(top: Sizes.SPACE1),
+      child: SGButtonRaised(text: "Finish", onPressed: () => {back(context)}),
     );
   }
 

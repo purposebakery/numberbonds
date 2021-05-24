@@ -9,6 +9,6 @@ class NavigationUtils {
   }
 
   static back(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 }
