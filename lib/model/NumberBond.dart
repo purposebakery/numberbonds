@@ -5,7 +5,15 @@ class NumberBond {
   int second = -1;
   int result = -1;
 
-  NumberBond.base10() {
+  NumberBond.empty();
+
+  NumberBond.base10WithPrevious(NumberBond previous) {
+    while (first == -1 || previous.first == first) {
+      base10();
+    }
+  }
+
+  void base10() {
     result = 10;
     first = Random().nextInt(8) + 1;
     second = result - first;

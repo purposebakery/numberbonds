@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/BaseState.dart';
+import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBondStatistics.dart';
 import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
+import 'package:numberbonds/styleguide/constants/Sizes.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
 import 'package:numberbonds/styleguide/progress/SGRelationshipProgress.dart';
 
@@ -56,7 +58,10 @@ class _HomePage extends BaseState<HomePage> {
 
   Widget buildStartButton() {
     return SGButtonRaised(
-        text: "Start", onPressed: () => {navigateToNumberBondsPage()});
+      text: "Start",
+      padding: EdgeInsets.only(top: Sizes.SPACE4, bottom: Sizes.SPACE4),
+      onPressed: () => {navigateToNumberBondsPage()},
+    );
   }
 
   Widget buildSumStatistics(BuildContext context) {
@@ -78,29 +83,32 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   Widget buildGoalContainer(BuildContext context) {
-    return Row(children: [
+    return Column(children: [
       //buildGoal(),
-      //buildGoalSettingsButton()
+      buildGoalSettingsButton(),
+      buildGoal(),
     ]);
+    //return buildGoalSettingsButton();
   }
 
   Widget buildGoal() {
-    return FutureBuilder<double>(
-        future: GoalStore.getGoalProgressPerunus(),
-        builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return SGGoalProgress(progress: snapshot.data!);
+    return FutureBuilder<GoalState>(
+        future: GoalStore.getGoalState(),
+        builder: (BuildContext context, AsyncSnapshot<GoalState> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            var text = "Goal at ${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
+            return SGGoalProgress(progress: snapshot.data!.goalProgressPerunus, text: text);
           } else {
-            return SGGoalProgress(progress: 0);
+            return SGGoalProgress(progress: 0, text: "");
           }
         });
   }
 
   Widget buildGoalSettingsButton() {
     return IconButton(
-        icon: Icon(Icons.admin_panel_settings), onPressed: () => {
-        showGoalDialog()
-    });
+        icon: Icon(Icons.settings_rounded),
+        onPressed: () => {showGoalDialog()});
   }
 
   Future<void> showGoalDialog() async {
@@ -111,9 +119,7 @@ class _HomePage extends BaseState<HomePage> {
           title: const Text('Goal Settings'),
           content: SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
-                Text('Set your daily goal!')
-              ],
+              children: const <Widget>[Text('Set your daily goal!')],
             ),
           ),
           actions: <Widget>[
@@ -121,6 +127,7 @@ class _HomePage extends BaseState<HomePage> {
               child: const Text('Reset'),
               onPressed: () {
                 GoalStore.resetGoalProgress();
+                reload();
                 Navigator.of(context).pop();
               },
             ),

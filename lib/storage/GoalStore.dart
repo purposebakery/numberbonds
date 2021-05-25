@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:numberbonds/model/GoalState.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalStore {
@@ -35,9 +36,17 @@ class GoalStore {
     return prefs.getInt(KEY_GOAL_PROGRESS) ?? GOAL_PROGRESS_DEFAULT;
   }
 
-  static Future<double> getGoalProgressPerunus() async {
+  static Future<GoalState> getGoalState() async {
     var goal = await getGoal();
     var goalProgress = await getGoalProgress();
-    return max(min(goalProgress.toDouble() / goal.toDouble(), 1),0);
+    var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1),0).toDouble();
+    var goalState = GoalState();
+    goalState.goal = goal;
+    goalState.goalProgress = goalProgress;
+    goalState.goalProgressPerunus = goalProgressPerunus;
+
+    return goalState;
   }
+
+
 }

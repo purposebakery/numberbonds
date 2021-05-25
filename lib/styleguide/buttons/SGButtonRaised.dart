@@ -7,11 +7,13 @@ import 'package:numberbonds/styleguide/constants/Sizes.dart';
 class SGButtonRaised extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final EdgeInsets padding;
 
   SGButtonRaised({
     Key? key,
     required this.text,
-    required this.onPressed
+    required this.onPressed,
+    required this.padding
   }) : super(key: key);
 
 
@@ -27,7 +29,7 @@ class SGButtonRaised extends StatelessWidget {
                 .apply(color: Colors.white)
         ),
         color: Colors.teal,
-        padding: EdgeInsets.only(top: Sizes.SPACE1, bottom: Sizes.SPACE2),
+        padding: padding,
         onPressed: onPressed);
   }
 }

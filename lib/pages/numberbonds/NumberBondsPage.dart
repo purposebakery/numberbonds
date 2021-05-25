@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
+import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
@@ -23,10 +24,10 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   int? secondInput;
   late double numberPadItemWidth;
-  late NumberBond numberbond;
+  late NumberBond numberbond = NumberBond.empty();
   late bool waitingForReset;
 
-  final ValueNotifier<double> goal = ValueNotifier<double>(0);
+  final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
 
   _NumberBondsPageState() {
     initializeValues();
@@ -34,9 +35,9 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void initializeValues() {
     this.secondInput = UNDEFINED;
-    this.numberbond = NumberBond.base10(); // TODO generate one different that current
+    this.numberbond = NumberBond.base10WithPrevious(this.numberbond);
     this.waitingForReset = false;
-    GoalStore.getGoalProgressPerunus().then((value) => this.goal.value = value);
+    GoalStore.getGoalState().then((value) => this.goal.value = value);
   }
 
   void _reset() {
@@ -65,7 +66,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
         this.secondInput = secondInput;
         this.waitingForReset = true;
-        DartUtils.delay(DartUtils.DURATION_2SEC, () {
+        DartUtils.delay(DartUtils.DURATION_1SEC, () {
           _reset();
         });
       } else {
@@ -132,11 +133,12 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }*/
 
   Widget buildGoalProgress(BuildContext context) {
-    return ValueListenableBuilder<double>(
-        builder: (BuildContext context, double value, Widget? child) {
+    return ValueListenableBuilder<GoalState>(
+        builder: (BuildContext context, GoalState goalState, Widget? child) {
+          var text = "${goalState.goalProgress} / ${goalState.goal}";
           return Padding(
             padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
-            child: SGGoalProgress(progress: value),
+            child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
           );
         },
       valueListenable: this.goal,
@@ -146,7 +148,10 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   Widget buildStopButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: Sizes.SPACE1),
-      child: SGButtonRaised(text: "Finish", onPressed: () => {back(context)}),
+      child: SGButtonRaised(
+          text: "Finish",
+          padding: EdgeInsets.only(top: Sizes.SPACE1, bottom: Sizes.SPACE2),
+        onPressed: () => {back(context)}),
     );
   }
 
