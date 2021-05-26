@@ -19,7 +19,13 @@ class SGGoalProgress extends StatelessWidget {
       lineHeight: Sizes.ICON_SMALL,
       percent: progress,
       //animation: true,
-      center: Text(text),
+      center: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context)
+              .textTheme.bodyText1!
+              .apply(color: Colors.white)
+      ),
       progressColor: Colors.teal,
       backgroundColor: Colors.grey.shade400,
     );

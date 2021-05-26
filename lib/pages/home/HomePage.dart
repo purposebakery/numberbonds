@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
-import 'package:numberbonds/model/NumberBondStatistics.dart';
 import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
-import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
-import 'package:numberbonds/styleguide/progress/SGRelationshipProgress.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -27,7 +25,7 @@ class _HomePage extends BaseState<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Numberbonds'),
+        title: Text('Numberbonds of 10'),
       ),
       body: buildBody(context),
     );
@@ -40,7 +38,6 @@ class _HomePage extends BaseState<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           buildStartButton(),
-          buildSumStatistics(context),
           buildGoalContainer(context),
         ]);
   }
@@ -64,29 +61,11 @@ class _HomePage extends BaseState<HomePage> {
     );
   }
 
-  Widget buildSumStatistics(BuildContext context) {
-    return FutureBuilder<NumberBondStatistics>(
-        future: StatisticsStore.getSumStatistics(),
-        builder: (BuildContext context,
-            AsyncSnapshot<NumberBondStatistics> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // YOUR CUSTOM CODE GOES HERE
-            return SGRelationshipProgress(
-                left: snapshot.data?.correct.toDouble() ?? 0,
-                right: snapshot.data?.wrong.toDouble() ?? 0);
-            return Text(
-                "Correct ${snapshot.data?.correct}\nWrong ${snapshot.data?.wrong}\nTotal ${snapshot.data?.total}");
-          } else {
-            return new CircularProgressIndicator();
-          }
-        });
-  }
-
   Widget buildGoalContainer(BuildContext context) {
     return Column(children: [
       //buildGoal(),
-      buildGoalSettingsButton(),
       buildGoal(),
+      buildGoalSettingsButton(context),
     ]);
     //return buildGoalSettingsButton();
   }
@@ -97,49 +76,40 @@ class _HomePage extends BaseState<HomePage> {
         builder: (BuildContext context, AsyncSnapshot<GoalState> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
-            var text = "Goal at ${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
-            return SGGoalProgress(progress: snapshot.data!.goalProgressPerunus, text: text);
+            var text =
+                "Goal at ${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
+            return Padding(
+                padding: const EdgeInsets.only(
+                    left: Sizes.SPACE1,
+                    right: Sizes.SPACE1,
+                    bottom: Sizes.SPACE2,
+                    top: Sizes.SPACE2),
+                child: SGGoalProgress(
+                    progress: snapshot.data!.goalProgressPerunus, text: text));
           } else {
             return SGGoalProgress(progress: 0, text: "");
           }
         });
   }
 
-  Widget buildGoalSettingsButton() {
+  Widget buildGoalSettingsButton(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.settings_rounded),
-        onPressed: () => {showGoalDialog()});
+        icon: Icon(Icons.delete_outline),
+        onPressed: () => {
+          settingsButtonClicked(context)
+        });
   }
 
-  Future<void> showGoalDialog() async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Goal Settings'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[Text('Set your daily goal!')],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Reset'),
-              onPressed: () {
-                GoalStore.resetGoalProgress();
-                reload();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  settingsButtonClicked(BuildContext context) {
+    SGAlertDialogParameters parameters = SGAlertDialogParameters();
+    parameters.title = "Reset goal?";
+    parameters.message = "Do you want to reset your daily goal?";
+    parameters.positiveButton = "Confirm";
+    parameters.negativeButton = "Cancel";
+    parameters.positiveCallback = ()=>{
+      GoalStore.resetGoalProgress(),
+      reload()
+    };
+    SGAlertDialog.showSGAlertDialog(context, parameters);
   }
 }

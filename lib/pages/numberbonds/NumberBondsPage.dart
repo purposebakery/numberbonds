@@ -87,7 +87,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     prebuild();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Numberbonds'),
+        title: Text('Numberbonds of 10'),
       ),
       body: buildBody(context),
     );
@@ -112,30 +112,15 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     );
   }
 
-  /*
-  Widget buildGoalProgress(BuildContext context) {
-    return FutureBuilder<double>(
-        future: GoalStore.getGoalProgressPerunus(),
-        builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-            return Padding(
-              padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
-              child: SGGoalProgress(progress: snapshot.data!),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
-              child: SGGoalProgress(progress: 0),
-            );
-          }
-        }
-    );
-  }*/
-
   Widget buildGoalProgress(BuildContext context) {
     return ValueListenableBuilder<GoalState>(
         builder: (BuildContext context, GoalState goalState, Widget? child) {
-          var text = "${goalState.goalProgress} / ${goalState.goal}";
+          var text = "";
+          if (goalState.goalProgressPerunus >= 1) {
+            text = "Goal reached!";
+          } else {
+            text = "${goalState.goalProgress} / ${goalState.goal}";
+          }
           return Padding(
             padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
             child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
@@ -203,7 +188,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       Icons.check,
       color: Colors.green,
       size: Sizes.ICON_LARGE,
-      semanticLabel: 'Text to announce in accessibility modes',
+      semanticLabel: 'Right answer!',
     );
   }
 
