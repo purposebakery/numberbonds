@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 
 class SGAlertDialog {
-  static Future<void> showSGAlertDialog(
-      BuildContext context, SGAlertDialogParameters parameters) async {
+  static Future<void> showSGAlertDialog(BuildContext context, SGAlertDialogParameters parameters) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: parameters.dismissible,
@@ -21,8 +20,7 @@ class SGAlertDialog {
     );
   }
 
-  static List<Widget> generateContent(
-      BuildContext context, SGAlertDialogParameters parameters) {
+  static List<Widget> generateContent(BuildContext context, SGAlertDialogParameters parameters) {
     var content = List<Widget>.empty(growable: true);
     if (parameters.message != null) {
       content.add(Text(parameters.message!));
@@ -30,8 +28,7 @@ class SGAlertDialog {
     return content;
   }
 
-  static List<Widget> generateActions(
-      BuildContext context, SGAlertDialogParameters parameters) {
+  static List<Widget> generateActions(BuildContext context, SGAlertDialogParameters parameters) {
     var actions = List<Widget>.empty(growable: true);
     if (parameters.negativeButton != null) {
       actions.add(TextButton(
@@ -47,15 +44,10 @@ class SGAlertDialog {
     if (parameters.positiveButton != null) {
       actions.add(TextButton(
         child: Text(
-            parameters.positiveButton!,
-          style: TextStyle(
-            color: SGColors.textInverse
-          ),
-
+          parameters.positiveButton!,
+          style: TextStyle(color: SGColors.textInverse),
         ),
-        style: ButtonStyle(
-            backgroundColor : MaterialStateProperty.all(SGColors.action)
-        ),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(SGColors.action)),
         onPressed: () {
           Navigator.of(context).pop();
           if (parameters.positiveCallback != null) {

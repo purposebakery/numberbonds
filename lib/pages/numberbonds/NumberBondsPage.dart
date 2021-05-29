@@ -10,7 +10,7 @@ import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
-import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
+import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
 
 class NumberBondsPage extends StatefulWidget {

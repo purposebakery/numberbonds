@@ -8,11 +8,7 @@ class SGGoalProgress extends StatelessWidget {
   final double progress;
   final String text;
 
-  SGGoalProgress({
-    Key? key,
-    required this.progress,
-    required this.text
-  }) : super(key: key);
+  SGGoalProgress({Key? key, required this.progress, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +16,9 @@ class SGGoalProgress extends StatelessWidget {
       lineHeight: Sizes.ICON_SMALL,
       percent: progress,
       //animation: true,
-      center: Text(
-          text,
+      center: Text(text,
           textAlign: TextAlign.center,
-          style: Theme.of(context)
-              .textTheme.bodyText1!
-              .apply(color: SGColors.textInverse)
-      ),
+          style: Theme.of(context).textTheme.bodyText1!.apply(color: SGColors.textInverse)),
       progressColor: SGColors.green,
       backgroundColor: SGColors.grey,
     );

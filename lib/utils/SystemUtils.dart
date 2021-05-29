@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class SystemUtils{
+class SystemUtils {
   static double getDisplaySizeWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }
@@ -13,7 +13,7 @@ class SystemUtils{
     return MediaQuery.of(context).size;
   }
 
-  static double getDisplayShortestSide(BuildContext context){
+  static double getDisplayShortestSide(BuildContext context) {
     return getDisplaySize(context).shortestSide;
   }
 }

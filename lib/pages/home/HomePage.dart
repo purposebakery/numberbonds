@@ -9,7 +9,7 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
-import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
+import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -76,18 +76,12 @@ class _HomePage extends BaseState<HomePage> {
     return FutureBuilder<GoalState>(
         future: GoalStore.getGoalState(),
         builder: (BuildContext context, AsyncSnapshot<GoalState> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data != null) {
-            var text =
-                "Daily goal \n${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
+          if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
+            var text = "Daily goal \n${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
             return Padding(
                 padding: const EdgeInsets.only(
-                    left: Sizes.SPACE1,
-                    right: Sizes.SPACE1,
-                    bottom: Sizes.SPACE2,
-                    top: Sizes.SPACE2),
-                child: SGGoalCircularProgress(
-                    progress: snapshot.data!.goalProgressPerunus, text: text));
+                    left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+                child: SGGoalCircularProgress(progress: snapshot.data!.goalProgressPerunus, text: text));
           } else {
             return SGGoalProgress(progress: 0, text: "");
           }
@@ -96,11 +90,11 @@ class _HomePage extends BaseState<HomePage> {
 
   Widget buildGoalSettingsButton(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.delete_outline,
-        color: SGColors.text,),
-        onPressed: () => {
-          settingsButtonClicked(context)
-        });
+        icon: Icon(
+          Icons.delete_outline,
+          color: SGColors.text,
+        ),
+        onPressed: () => {settingsButtonClicked(context)});
   }
 
   settingsButtonClicked(BuildContext context) {
@@ -109,10 +103,7 @@ class _HomePage extends BaseState<HomePage> {
     parameters.message = "Do you want to reset your daily goal?";
     parameters.positiveButton = "Confirm";
     parameters.negativeButton = "Cancel";
-    parameters.positiveCallback = ()=>{
-      GoalStore.resetGoalProgress(),
-      reload()
-    };
+    parameters.positiveCallback = () => {GoalStore.resetGoalProgress(), reload()};
     SGAlertDialog.showSGAlertDialog(context, parameters);
   }
 }

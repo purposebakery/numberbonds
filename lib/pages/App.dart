@@ -7,9 +7,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Numberbonds',
-      theme: ThemeData(
-          primarySwatch: Colors.teal
-      ),
+      theme: ThemeData(primarySwatch: Colors.teal),
       home: HomePage(),
     );
   }

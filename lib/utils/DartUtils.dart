@@ -1,7 +1,6 @@
 import 'dart:async';
 
 class DartUtils {
-
   static const int DURATION_SHORT_MILLIS = 150;
   static const int DURATION_MEDIUM_MILLIS = 300;
   static const int DURATION_LONG_MILLIS = 600;
