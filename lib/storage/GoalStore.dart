@@ -20,6 +20,20 @@ class GoalStore {
     return prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
   }
 
+  static Future<void> increaseGoal() async {
+    final prefs = await SharedPreferences.getInstance();
+    var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
+    prefs.setInt(KEY_GOAL, goal+5);
+  }
+
+  static Future<void> decreaseGoal() async {
+    final prefs = await SharedPreferences.getInstance();
+    var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
+    if (goal > 5) {
+      prefs.setInt(KEY_GOAL, goal-5);
+    }
+  }
+
   static Future<void> addGoalProgress() async {
     final prefs = await SharedPreferences.getInstance();
     var progress = prefs.getInt(KEY_GOAL_PROGRESS) ?? GOAL_PROGRESS_DEFAULT;

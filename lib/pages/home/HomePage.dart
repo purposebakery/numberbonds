@@ -64,11 +64,15 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   Widget buildGoalContainer(BuildContext context) {
-    return Column(children: [
-      //buildGoal(),
-      buildGoal(),
-      buildGoalSettingsButton(context),
-    ]);
+    return Expanded(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+        //buildGoal(),
+        buildGoal(),
+            buildGoalButtons(context),
+      ]),
+    );
     //return buildGoalSettingsButton();
   }
 
@@ -87,6 +91,17 @@ class _HomePage extends BaseState<HomePage> {
           }
         });
   }
+  
+  Widget buildGoalButtons(BuildContext context) {
+    return Row (
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildGoalSettingsButton(context),
+          buildGoalIncreaseButton(context),
+          buildGoalDecreaseButton(context)
+        ],
+      );
+  }
 
   Widget buildGoalSettingsButton(BuildContext context) {
     return IconButton(
@@ -94,10 +109,29 @@ class _HomePage extends BaseState<HomePage> {
           Icons.delete_outline,
           color: SGColors.text,
         ),
-        onPressed: () => {settingsButtonClicked(context)});
+        onPressed: () => {goalSettingsButtonClicked(context)});
   }
 
-  settingsButtonClicked(BuildContext context) {
+  Widget buildGoalIncreaseButton(BuildContext context) {
+    return IconButton(
+        icon: Icon(
+          Icons.arrow_circle_up,
+          color: SGColors.text,
+        ),
+        onPressed: () => {goalIncreaseButtonClicked(context)});
+  }
+
+  Widget buildGoalDecreaseButton(BuildContext context) {
+    return IconButton(
+        icon: Icon(
+          Icons.arrow_circle_down,
+          color: SGColors.text,
+        ),
+        onPressed: () => {goalDecreaseButtonClicked(context)});
+  }
+
+
+  goalSettingsButtonClicked(BuildContext context) {
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Reset goal?";
     parameters.message = "Do you want to reset your daily goal?";
@@ -105,5 +139,15 @@ class _HomePage extends BaseState<HomePage> {
     parameters.negativeButton = "Cancel";
     parameters.positiveCallback = () => {GoalStore.resetGoalProgress(), reload()};
     SGAlertDialog.showSGAlertDialog(context, parameters);
+  }
+
+  goalIncreaseButtonClicked(BuildContext context) {
+    GoalStore.increaseGoal();
+    reload();
+  }
+  
+  goalDecreaseButtonClicked(BuildContext context) {
+    GoalStore.decreaseGoal();
+    reload();
   }
 }
