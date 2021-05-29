@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-
-import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/styleguide/constants/SGColors.dart';
 
 class SGButtonRaised extends StatelessWidget {
   final String text;
@@ -26,9 +25,9 @@ class SGButtonRaised extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .headline5!
-                .apply(color: Colors.white)
+                .apply(color: SGColors.textInverse)
         ),
-        color: Colors.teal,
+        color: SGColors.action,
         padding: padding,
         onPressed: onPressed);
   }

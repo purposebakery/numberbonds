@@ -7,7 +7,8 @@ import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/storage/StatisticsStore.dart';
-import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/styleguide/constants/SGColors.dart';
+import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
@@ -117,7 +118,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         builder: (BuildContext context, GoalState goalState, Widget? child) {
           var text = "";
           if (goalState.goalProgressPerunus >= 1) {
-            text = "Goal reached!";
+            text = "Daily goal reached!";
           } else {
             text = "${goalState.goalProgress} / ${goalState.goal}";
           }
@@ -186,7 +187,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   Widget buildEquationCheckResponseIcon() {
     return Icon(
       Icons.check,
-      color: Colors.green,
+      color: SGColors.green,
       size: Sizes.ICON_LARGE,
       semanticLabel: 'Right answer!',
     );
@@ -259,6 +260,6 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
             style: Theme.of(context)
                 .textTheme
                 .headline4!
-                .apply(color: Colors.grey.shade800)));
+                .apply(color: SGColors.text)));
   }
 }

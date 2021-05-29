@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numberbonds/styleguide/constants/SGColors.dart';
 
 class SGAlertDialog {
   static Future<void> showSGAlertDialog(
@@ -48,12 +49,12 @@ class SGAlertDialog {
         child: Text(
             parameters.positiveButton!,
           style: TextStyle(
-            color: Colors.white
+            color: SGColors.textInverse
           ),
 
         ),
         style: ButtonStyle(
-            backgroundColor : MaterialStateProperty.all(Colors.teal)
+            backgroundColor : MaterialStateProperty.all(SGColors.action)
         ),
         onPressed: () {
           Navigator.of(context).pop();

@@ -5,8 +5,10 @@ import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
-import 'package:numberbonds/styleguide/constants/Sizes.dart';
+import 'package:numberbonds/styleguide/constants/SGColors.dart';
+import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
+import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalProgress.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,14 +79,14 @@ class _HomePage extends BaseState<HomePage> {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
             var text =
-                "Goal at ${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
+                "Daily goal \n${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
             return Padding(
                 padding: const EdgeInsets.only(
                     left: Sizes.SPACE1,
                     right: Sizes.SPACE1,
                     bottom: Sizes.SPACE2,
                     top: Sizes.SPACE2),
-                child: SGGoalProgress(
+                child: SGGoalCircularProgress(
                     progress: snapshot.data!.goalProgressPerunus, text: text));
           } else {
             return SGGoalProgress(progress: 0, text: "");
@@ -94,7 +96,8 @@ class _HomePage extends BaseState<HomePage> {
 
   Widget buildGoalSettingsButton(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.delete_outline),
+        icon: Icon(Icons.delete_outline,
+        color: SGColors.text,),
         onPressed: () => {
           settingsButtonClicked(context)
         });
