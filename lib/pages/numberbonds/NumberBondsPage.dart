@@ -6,9 +6,9 @@ import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/storage/StatisticsStore.dart';
+import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
-import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
 
@@ -101,31 +101,30 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         buildStopButton(context),
         buildNumberPad(context),
         new Expanded(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              buildGoalProgress(context),
-              buildEquation(context),
-              buildEquationCheckResponse(),
-            ])),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          buildGoalProgress(context),
+          buildEquation(context),
+          buildEquationCheckResponse(),
+        ])),
       ],
     );
   }
 
   Widget buildGoalProgress(BuildContext context) {
     return ValueListenableBuilder<GoalState>(
-        builder: (BuildContext context, GoalState goalState, Widget? child) {
-          var text = "";
-          if (goalState.goalProgressPerunus >= 1) {
-            text = "Daily goal reached!";
-          } else {
-            text = "${goalState.goalProgress} / ${goalState.goal}";
-          }
-          return Padding(
-            padding: const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top : Sizes.SPACE2),
-            child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
-          );
-        },
+      builder: (BuildContext context, GoalState goalState, Widget? child) {
+        var text = "";
+        if (goalState.goalProgressPerunus >= 1) {
+          text = "Daily goal reached!";
+        } else {
+          text = "${goalState.goalProgress} / ${goalState.goal}";
+        }
+        return Padding(
+          padding:
+              const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+          child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
+        );
+      },
       valueListenable: this.goal,
     );
   }
@@ -136,7 +135,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       child: SGButtonRaised(
           text: "Finish",
           padding: EdgeInsets.only(top: Sizes.SPACE1, bottom: Sizes.SPACE2),
-        onPressed: () => {back(context)}),
+          onPressed: () => {back(context)}),
     );
   }
 
@@ -165,22 +164,6 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       duration: DartUtils.DURATION_MEDIUM,
       child: buildEquationCheckResponseIcon(),
     );
-    /*
-    return Visibility(
-        visible: numberbond.isSecond(secondInput),
-        replacement: SizedBox(height: Sizes.ICON_LARGE),
-        maintainState: false,
-        child: SizedBox(
-          width: Sizes.ICON_LARGE,
-          height: Sizes.ICON_LARGE,
-          child: Icon(
-            Icons.check,
-            color: Colors.green,
-            size: Sizes.ICON_LARGE,
-            semanticLabel: 'Text to announce in accessibility modes',
-          ),
-          //Lottie.asset('assets/check_lottie.json', repeat: false),
-        ));*/
   }
 
   Widget buildEquationCheckResponseIcon() {
@@ -240,13 +223,10 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
               _setSecondInput(int.parse(number));
             },
             style: ButtonStyle(
-                minimumSize: MaterialStateProperty.resolveWith(
-                    (_) => Size(numberPadItemWidth, numberPadItemWidth)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(numberPadItemWidth / 2.0),
-                        side: BorderSide(color: Colors.red)))),
+                minimumSize: MaterialStateProperty.resolveWith((_) => Size(numberPadItemWidth, numberPadItemWidth)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(numberPadItemWidth / 2.0),
+                    side: BorderSide(color: Colors.red)))),
             child: buildNumberField(context, number)));
   }
 
@@ -256,9 +236,6 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         child: Text(number,
             key: ValueKey<int>(number.hashCode),
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headline4!
-                .apply(color: SGColors.text)));
+            style: Theme.of(context).textTheme.headline4!.apply(color: SGColors.text)));
   }
 }

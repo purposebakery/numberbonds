@@ -9,7 +9,6 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
-import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -19,6 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends BaseState<HomePage> {
+  final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
+
   _HomePage() {
     // todo init
   }
@@ -52,7 +53,9 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   void reload() {
-    setState(() {});
+    setState(() {
+      GoalStore.getGoalState().then((value) => this.goal.value = value);
+    });
   }
 
   Widget buildStartButton() {
@@ -65,42 +68,35 @@ class _HomePage extends BaseState<HomePage> {
 
   Widget buildGoalContainer(BuildContext context) {
     return Expanded(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-        //buildGoal(),
-        buildGoal(),
-            buildGoalButtons(context),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        buildGoal(context),
+        buildGoalButtons(context),
       ]),
     );
     //return buildGoalSettingsButton();
   }
 
-  Widget buildGoal() {
-    return FutureBuilder<GoalState>(
-        future: GoalStore.getGoalState(),
-        builder: (BuildContext context, AsyncSnapshot<GoalState> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-            var text = "Daily goal \n${snapshot.data!.goalProgress} / ${snapshot.data!.goal}";
-            return Padding(
-                padding: const EdgeInsets.only(
-                    left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
-                child: SGGoalCircularProgress(progress: snapshot.data!.goalProgressPerunus, text: text));
-          } else {
-            return SGGoalProgress(progress: 0, text: "");
-          }
-        });
+  Widget buildGoal(BuildContext context) {
+    return ValueListenableBuilder<GoalState>(
+      builder: (BuildContext context, GoalState goalState, Widget? child) {
+        var text = "Daily goal \n${goalState.goalProgress} / ${goalState.goal}";
+        if (goalState.goalProgressPerunus >= 1) {
+          text = "Daily goal\nreached!";
+        }
+        return Padding(
+            padding:
+                const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+            child: SGGoalCircularProgress(progress: goalState.goalProgressPerunus, text: text));
+      },
+      valueListenable: this.goal,
+    );
   }
-  
+
   Widget buildGoalButtons(BuildContext context) {
-    return Row (
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildGoalSettingsButton(context),
-          buildGoalIncreaseButton(context),
-          buildGoalDecreaseButton(context)
-        ],
-      );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [buildGoalSettingsButton(context), buildGoalIncreaseButton(context), buildGoalDecreaseButton(context)],
+    );
   }
 
   Widget buildGoalSettingsButton(BuildContext context) {
@@ -130,12 +126,11 @@ class _HomePage extends BaseState<HomePage> {
         onPressed: () => {goalDecreaseButtonClicked(context)});
   }
 
-
   goalSettingsButtonClicked(BuildContext context) {
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Reset goal?";
     parameters.message = "Do you want to reset your daily goal?";
-    parameters.positiveButton = "Confirm";
+    parameters.positiveButton = "Yes";
     parameters.negativeButton = "Cancel";
     parameters.positiveCallback = () => {GoalStore.resetGoalProgress(), reload()};
     SGAlertDialog.showSGAlertDialog(context, parameters);
@@ -145,7 +140,7 @@ class _HomePage extends BaseState<HomePage> {
     GoalStore.increaseGoal();
     reload();
   }
-  
+
   goalDecreaseButtonClicked(BuildContext context) {
     GoalStore.decreaseGoal();
     reload();

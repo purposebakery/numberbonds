@@ -5,7 +5,7 @@ class SGColors {
   static Color textInverse = Colors.white;
 
   static Color background = Colors.white;
-  static Color action = Colors.teal;
-  static Color green = Colors.green;
+  static MaterialColor action = Colors.teal;
+  static MaterialColor green = Colors.green;
   static Color grey = Colors.grey.shade400;
 }

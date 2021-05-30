@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/utils/DateUtils.dart';
+import 'package:numberbonds/utils/ToastUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalStore {
   static const int GOAL_DEFAULT = 25;
+  static const int GOAL_MAX = 1000;
   static const int GOAL_PROGRESS_DEFAULT = 0;
 
   static const String KEY_GOAL = "KEY_GOAL";
@@ -25,14 +27,20 @@ class GoalStore {
   static Future<void> increaseGoal() async {
     final prefs = await SharedPreferences.getInstance();
     var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
-    prefs.setInt(KEY_GOAL, goal+5);
+    if (goal >= GOAL_MAX) {
+      ToastUtils.toastLong("I think that's enough . . .");
+    } else {
+      prefs.setInt(KEY_GOAL, goal + 5);
+    }
   }
 
   static Future<void> decreaseGoal() async {
     final prefs = await SharedPreferences.getInstance();
     var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
     if (goal > 5) {
-      prefs.setInt(KEY_GOAL, goal-5);
+      prefs.setInt(KEY_GOAL, goal - 5);
+    } else {
+      ToastUtils.toastLong("That's the minimum . . .");
     }
   }
 
@@ -68,7 +76,7 @@ class GoalStore {
   static Future<GoalState> getGoalState() async {
     var goal = await getGoal();
     var goalProgress = await getGoalProgress();
-    var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1),0).toDouble();
+    var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1), 0).toDouble();
     var goalState = GoalState();
     goalState.goal = goal;
     goalState.goalProgress = goalProgress;
@@ -76,6 +84,4 @@ class GoalStore {
 
     return goalState;
   }
-
-
 }

@@ -1,18 +1,14 @@
-
 import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
 import 'package:numberbonds/model/NumberBondStatistics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StatisticsStore {
-
   static const String KEY_SUM = "KEY_SUM";
 
   static Future<void> storeNumberBondResult(NumberBond numberBond, NumberBondResult numberBondResult) async {
     // Update sum
-    getStatistics(KEY_SUM).then((NumberBondStatistics sum) => {
-      updateStatistics(KEY_SUM, sum, numberBondResult)
-    });
+    getStatistics(KEY_SUM).then((NumberBondStatistics sum) => {updateStatistics(KEY_SUM, sum, numberBondResult)});
   }
 
   static Future<NumberBondStatistics> getSumStatistics() async {
