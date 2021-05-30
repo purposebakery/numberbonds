@@ -1,14 +1,16 @@
 import 'dart:math';
 
 import 'package:numberbonds/model/GoalState.dart';
+import 'package:numberbonds/utils/DateUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalStore {
-  static const int GOAL_DEFAULT = 10;
+  static const int GOAL_DEFAULT = 25;
   static const int GOAL_PROGRESS_DEFAULT = 0;
 
   static const String KEY_GOAL = "KEY_GOAL";
   static const String KEY_GOAL_PROGRESS = "KEY_GOAL_PROGRESS";
+  static const String KEY_GOAL_PROGRESS_DAY = "KEY_GOAL_PROGRESS_DAY";
 
   static Future<void> storeGoal(int goal) async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,6 +45,19 @@ class GoalStore {
   static Future<void> resetGoalProgress() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(KEY_GOAL_PROGRESS, 0);
+  }
+
+  static Future<void> resetGoalProgressIfNewDay() async {
+    final prefs = await SharedPreferences.getInstance();
+    var progressDay = prefs.getString(KEY_GOAL_PROGRESS_DAY);
+    var today = DateUtils.getFormatted(DateTime.now());
+    if (today != progressDay) {
+      // Day has changed
+      resetGoalProgress();
+    } else {
+      // Day is the same no need to do anything
+    }
+    prefs.setString(KEY_GOAL_PROGRESS_DAY, today);
   }
 
   static Future<int> getGoalProgress() async {

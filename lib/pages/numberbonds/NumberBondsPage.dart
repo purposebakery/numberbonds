@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lottie/lottie.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
