@@ -28,7 +28,7 @@ class _HomePage extends BaseState<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Numberbonds of 10'),
+        title: Text('Number bonds of 10'),
       ),
       body: buildBody(context),
     );

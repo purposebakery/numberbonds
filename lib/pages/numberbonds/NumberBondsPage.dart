@@ -87,7 +87,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     prebuild();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Numberbonds of 10'),
+        title: Text('Number bonds of 10'),
       ),
       body: buildBody(context),
     );
@@ -99,12 +99,12 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         buildStopButton(context),
-        buildNumberPad(context),
+        buildGoalProgress(context),
         new Expanded(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          buildGoalProgress(context),
           buildEquation(context),
           buildEquationCheckResponse(),
+          buildNumberPad(context),
         ])),
       ],
     );

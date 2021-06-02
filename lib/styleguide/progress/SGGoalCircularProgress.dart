@@ -20,6 +20,7 @@ class SGGoalCircularProgress extends StatelessWidget {
           textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1!.apply(color: SGColors.text)),
       circularStrokeCap: CircularStrokeCap.round,
       progressColor: SGColors.green,
+      backgroundColor: SGColors.grey
     );
   }
 }
