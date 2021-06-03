@@ -33,4 +33,4 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon.png"
+  image_path: "store/logo.png" # flutter pub run flutter_launcher_icons:main
