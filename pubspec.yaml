@@ -23,14 +23,23 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.9.0
-
+  #flutter_rename_app: ^1.0.0
 
 # flutter
 flutter:
   uses-material-design: true
 
-
+# Dev tooling
+# flutter pub run flutter_launcher_icons:main
 flutter_icons:
   android: true
   ios: true
-  image_path: "store/logo.png" # flutter pub run flutter_launcher_icons:main
+  image_path: "store/logo.png"
+
+# flutter pub run flutter_rename_app
+#flutter_rename_app:
+#  application_name: Number bonds
+#  dart_package_name: numberbonds
+#  application_id: com.purposebakery.numberbonds
+#  bundle_id: com.purposebakery.numberbonds
+#  android_package_name: com.purposebakery
