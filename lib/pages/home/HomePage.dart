@@ -9,6 +9,7 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -29,8 +30,18 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Number bonds of 10'),
+        actions: [buildInfoActions()],
       ),
       body: buildBody(context),
+    );
+  }
+
+  Widget buildInfoActions() {
+    return IconButton(
+      icon: Icon(Icons.info_outline, color: SGColors.textInverse,),
+      onPressed: () {
+        showInfoMessage();
+      },
     );
   }
 
@@ -45,18 +56,6 @@ class _HomePage extends BaseState<HomePage> {
         ]);
   }
 
-  void navigateToNumberBondsPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NumberBondsPage()),
-    ).then((value) => reload());
-  }
-
-  void reload() {
-    setState(() {
-      GoalStore.getGoalState().then((value) => this.goal.value = value);
-    });
-  }
 
   Widget buildStartButton() {
     return SGButtonRaised(
@@ -65,6 +64,7 @@ class _HomePage extends BaseState<HomePage> {
       onPressed: () => {navigateToNumberBondsPage()},
     );
   }
+
 
   Widget buildGoalContainer(BuildContext context) {
     return Expanded(
@@ -126,6 +126,14 @@ class _HomePage extends BaseState<HomePage> {
         onPressed: () => {goalDecreaseButtonClicked(context)});
   }
 
+  // Logic
+  navigateToNumberBondsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NumberBondsPage()),
+    ).then((value) => reload());
+  }
+
   goalSettingsButtonClicked(BuildContext context) {
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Reset goal?";
@@ -144,5 +152,26 @@ class _HomePage extends BaseState<HomePage> {
   goalDecreaseButtonClicked(BuildContext context) {
     GoalStore.decreaseGoal();
     reload();
+  }
+
+  reload() {
+    setState(() {
+      GoalStore.getGoalState().then((value) => this.goal.value = value);
+    });
+  }
+
+  showInfoMessage() {
+
+    SGAlertDialogParameters parameters = SGAlertDialogParameters();
+    parameters.title = "Hi there!";
+    parameters.message = "I believe in free education so I develop free educational apps (sounds logical right?). If you feel like supporting me, even only a small donation would absolutely make my day!";
+    parameters.positiveButton = "Donate";
+    parameters.negativeButton = "Not today ;)";
+    parameters.positiveCallback = () => {openDonateUrl()};
+    SGAlertDialog.showSGAlertDialog(context, parameters);
+  }
+
+  openDonateUrl() {
+    launch("https://buymeacoffee.com/purposebakery");
   }
 }
