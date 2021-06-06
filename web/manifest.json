@@ -1,0 +1,23 @@
+{
+    "name": "Number bonds",
+    "short_name": "Number bonds",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#4CAF50",
+    "theme_color": "#4CAF50",
+    "description": "A simple app to practice number bonds to 10 ",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

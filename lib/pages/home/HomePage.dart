@@ -21,12 +21,9 @@ class HomePage extends StatefulWidget {
 class _HomePage extends BaseState<HomePage> {
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
 
-  _HomePage() {
-    // todo init
-  }
-
   @override
   Widget build(BuildContext context) {
+    reload();
     return Scaffold(
       appBar: AppBar(
         title: Text('Number bonds of 10'),
@@ -164,7 +161,7 @@ class _HomePage extends BaseState<HomePage> {
 
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Hi there!";
-    parameters.message = "I believe in free education so I develop free educational apps (sounds logical right?). If you feel like supporting me, even only a small donation would absolutely make my day!";
+    parameters.message = "I'm Oliver. I believe in free education so I develop free educational apps (sounds logical right?). If you feel like supporting me, even only a small donation would absolutely make my day!";
     parameters.positiveButton = "Donate";
     parameters.negativeButton = "Not today ;)";
     parameters.positiveCallback = () => {openDonateUrl()};

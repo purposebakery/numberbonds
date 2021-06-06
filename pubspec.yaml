@@ -35,7 +35,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "store/logo.png"
+  image_path: "store/logo1024.png"
 
 # flutter pub run flutter_rename_app
 #flutter_rename_app:
