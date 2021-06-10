@@ -25,9 +25,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-Properties signing = new Properties()
-signing.load(new FileInputStream(file("../../../signing.properties")))
-
+/*
+def storeFile = System.getenv("PURPOSEBAKERY_STOREFILE") ?: "X"
+def storePassword = System.getenv("PURPOSEBAKERY_STOREPASSWORD") ?: "X"
+def keyAlias = System.getenv("PURPOSEBAKERY_KEYALIAS") ?: "X"
+def keyPassword = System.getenv("PURPOSEBAKERY_KEYPASSWORD") ?: "X"
+*/
 android {
     compileSdkVersion 30
 
@@ -43,23 +46,29 @@ android {
         versionName flutterVersionName
     }
 
-    buildTypes {
-        debug {
-            signingConfig signingConfigs.debug
-        }
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-        }
-    }
-
+    /*
     signingConfigs {
         release {
             v2SigningEnabled true
-            storeFile file(signing['Purposebakery.signing.storeFile'])
-            storePassword signing['Purposebakery.signing.storePassword']
-            keyAlias signing['Purposebakery.signing.keyAlias']
-            keyPassword signing['Purposebakery.signing.keyPassword']
+            storeFile file(storeFile)
+            storePassword storePassword
+            keyAlias keyAlias
+            keyPassword keyPassword
+        }
+    }*/
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            shrinkResources false
+            //signingConfig signingConfigs.release
         }
     }
 }
