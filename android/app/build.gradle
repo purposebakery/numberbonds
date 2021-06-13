@@ -25,12 +25,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-/*
-def storeFile = System.getenv("PURPOSEBAKERY_STOREFILE") ?: "X"
-def storePassword = System.getenv("PURPOSEBAKERY_STOREPASSWORD") ?: "X"
-def keyAlias = System.getenv("PURPOSEBAKERY_KEYALIAS") ?: "X"
-def keyPassword = System.getenv("PURPOSEBAKERY_KEYPASSWORD") ?: "X"
-*/
 android {
     compileSdkVersion 30
 
@@ -46,29 +40,22 @@ android {
         versionName flutterVersionName
     }
 
-    /*
+
     signingConfigs {
         release {
             v2SigningEnabled true
-            storeFile file(storeFile)
-            storePassword storePassword
-            keyAlias keyAlias
-            keyPassword keyPassword
+            storeFile file("${System.getenv("PURPOSEBAKERY_STOREFILE")}")
+            storePassword "${System.getenv("PURPOSEBAKERY_STOREPASSWORD")}"
+            keyAlias "${System.getenv("PURPOSEBAKERY_KEYALIAS")}"
+            keyPassword "${System.getenv("PURPOSEBAKERY_KEYPASSWORD")}"
         }
-    }*/
+    }
 
     buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            debuggable true
-            minifyEnabled false
-            shrinkResources false
-        }
         release {
-            debuggable false
-            minifyEnabled false
-            shrinkResources false
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
+        }
+        debug {
         }
     }
 }
