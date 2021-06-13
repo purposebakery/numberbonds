@@ -13,7 +13,7 @@ class SGGoalProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new LinearPercentIndicator(
-      lineHeight: Sizes.ICON_SMALL,
+      lineHeight: SGSizes.ICON_SMALL,
       percent: progress,
       //animation: true,
       center: Text(text,

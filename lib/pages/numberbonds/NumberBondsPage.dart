@@ -79,7 +79,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void prebuild() {
     //double width = SystemUtils.getDisplayShortestSide(context);
-    numberPadItemWidth = Sizes.ICON_LARGE;
+    numberPadItemWidth = SGSizes.ICON_LARGE_D;
   }
 
   @override
@@ -103,7 +103,6 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         new Expanded(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           buildEquation(context),
-          buildEquationCheckResponse(),
           buildNumberPad(context),
         ])),
       ],
@@ -121,7 +120,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         }
         return Padding(
           padding:
-              const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+              const EdgeInsets.only(left: SGSizes.SPACE1, right: SGSizes.SPACE1, bottom: SGSizes.SPACE1, top: 0),
           child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
         );
       },
@@ -131,10 +130,10 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   Widget buildStopButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: Sizes.SPACE1),
+      padding: const EdgeInsets.only(top: SGSizes.SPACE1),
       child: SGButtonRaised(
           text: "Finish",
-          padding: EdgeInsets.only(top: Sizes.SPACE1, bottom: Sizes.SPACE2),
+          padding: EdgeInsets.only(top: SGSizes.SPACE1, bottom: SGSizes.SPACE1),
           onPressed: () => {back(context)}),
     );
   }
@@ -154,38 +153,26 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     ]);
   }
 
-  Widget buildEquationCheckResponse() {
-    bool visible = numberbond.isSecond(secondInput);
-    return AnimatedOpacity(
-      // If the widget is visible, animate to 0.0 (invisible).
-      // If the widget is hidden, animate to 1.0 (fully visible).
-      opacity: visible ? 1.0 : 0.0,
-      curve: Curves.decelerate,
-      duration: DartUtils.DURATION_MEDIUM,
-      child: buildEquationCheckResponseIcon(),
-    );
-  }
-
   Widget buildEquationCheckResponseIcon() {
     return Icon(
       Icons.check,
       color: SGColors.green,
-      size: Sizes.ICON_LARGE,
+      size: SGSizes.ICON_LARGE,
       semanticLabel: 'Right answer!',
     );
   }
 
   Widget buildEquationNumber(BuildContext context, String number) {
     return Container(
-      height: Sizes.ICON_MEDIUM,
-      width: Sizes.ICON_MEDIUM,
+      height: SGSizes.ICON_MEDIUM,
+      width: SGSizes.ICON_MEDIUM,
       child: buildNumberField(context, number),
     );
   }
 
   Widget buildNumberPad(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: Sizes.SPACE2, top: Sizes.SPACE2),
+      padding: const EdgeInsets.only(bottom: SGSizes.SPACE2, top: SGSizes.SPACE2),
       child: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -217,7 +204,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   Widget buildNumberPadNumber(BuildContext context, String number) {
     return Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(SGSizes.SPACE0_25),
         child: OutlinedButton(
             onPressed: () {
               _setSecondInput(int.parse(number));

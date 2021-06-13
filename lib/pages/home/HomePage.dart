@@ -9,6 +9,7 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
+import 'package:numberbonds/utils/SystemUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +24,8 @@ class _HomePage extends BaseState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SGSizes.initializeDynamic(context);
+
     reload();
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +60,7 @@ class _HomePage extends BaseState<HomePage> {
   Widget buildStartButton() {
     return SGButtonRaised(
       text: "Start",
-      padding: EdgeInsets.only(top: Sizes.SPACE4, bottom: Sizes.SPACE4),
+      padding: EdgeInsets.only(top: SGSizes.SPACE3_D, bottom: SGSizes.SPACE3_D),
       onPressed: () => {navigateToNumberBondsPage()},
     );
   }
@@ -82,8 +85,11 @@ class _HomePage extends BaseState<HomePage> {
         }
         return Padding(
             padding:
-                const EdgeInsets.only(left: Sizes.SPACE1, right: Sizes.SPACE1, bottom: Sizes.SPACE2, top: Sizes.SPACE2),
-            child: SGGoalCircularProgress(progress: goalState.goalProgressPerunus, text: text));
+                const EdgeInsets.only(left: SGSizes.SPACE1, right: SGSizes.SPACE1, bottom: SGSizes.SPACE2, top: SGSizes.SPACE2),
+            child: SGGoalCircularProgress(
+                radius: SystemUtils.getDisplayShortestSideHalf(context),
+                progress: goalState.goalProgressPerunus,
+                text: text));
       },
       valueListenable: this.goal,
     );
