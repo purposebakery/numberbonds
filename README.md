@@ -3,7 +3,9 @@
 A very simple app for kids to practice number bonds of 10 (e.g. 4+6=10, 8+2=10, etc.). Has a variable daily goal to aid regular practice.
 
 Play Store [here](https://play.google.com/store/apps/details?id=com.purposebakery.numberbonds) 
+
 App Store: Coming soon
+
 Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrome at this point?)
 
 ## Backlog
