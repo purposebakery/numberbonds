@@ -78,12 +78,12 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }
 
   void prebuild() {
-    //double width = SystemUtils.getDisplayShortestSide(context);
     numberPadItemWidth = SGSizes.ICON_LARGE_D;
   }
 
   @override
   Widget build(BuildContext context) {
+    buildState(context);
     prebuild();
     return Scaffold(
       appBar: AppBar(
@@ -119,8 +119,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
           text = "${goalState.goalProgress} / ${goalState.goal}";
         }
         return Padding(
-          padding:
-              const EdgeInsets.only(left: SGSizes.SPACE1, right: SGSizes.SPACE1, bottom: SGSizes.SPACE1, top: 0),
+          padding: EdgeInsets.only(left: SGSizes.SPACE2_D, right: SGSizes.SPACE2_D, bottom: SGSizes.SPACE1_D, top: 0),
           child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
         );
       },
@@ -133,7 +132,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       padding: const EdgeInsets.only(top: SGSizes.SPACE1),
       child: SGButtonRaised(
           text: "Finish",
-          padding: EdgeInsets.only(top: SGSizes.SPACE1, bottom: SGSizes.SPACE1),
+          padding: EdgeInsets.only(top: SGSizes.SPACE1_D, bottom: SGSizes.SPACE1_D),
           onPressed: () => {back(context)}),
     );
   }
@@ -172,7 +171,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   Widget buildNumberPad(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: SGSizes.SPACE2, top: SGSizes.SPACE2),
+      padding: EdgeInsets.only(top: SGSizes.SPACE2_D),
       child: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

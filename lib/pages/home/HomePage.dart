@@ -24,7 +24,7 @@ class _HomePage extends BaseState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SGSizes.initializeDynamic(context);
+    buildState(context);
 
     reload();
     return Scaffold(

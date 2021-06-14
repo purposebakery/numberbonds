@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/widgets.dart';
 import 'package:numberbonds/utils/SystemUtils.dart';
 
@@ -40,9 +38,6 @@ class SGSizes {
     } else {
       dynamicScale = 1.75;
     }
-
-    print("shortestSide: " + shortestSide.toString());
-    print("dynamicScale: " + dynamicScale.toString());
 
     SGSizes.SPACE0_25_D = SPACE0_25 * dynamicScale;
     SGSizes.SPACE0_5_D = SPACE0_5 * dynamicScale;
