@@ -3,9 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:numberbonds/pages/home/HomePage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
-import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 
 class App extends StatelessWidget {
+  static const SCREENSHOT_MODE = false;
+
   @override
   Widget build(BuildContext context) {
     initialize(context);
@@ -18,6 +19,13 @@ class App extends StatelessWidget {
   }
 
   void initialize(BuildContext context) {
+    initializeScreenshotMode();
     GoalStore.resetGoalProgressIfNewDay();
+  }
+
+  void initializeScreenshotMode() {
+    // TODO set goals to right number
+    if (SCREENSHOT_MODE) {
+    } else {}
   }
 }

@@ -10,6 +10,11 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 
 ## Backlog
 
+### Must do
+
+- integrate test into "pipeline"
+- create positive and negative visual feedback for answers 
+
 ### Pipelines
 
 - Android build + Release

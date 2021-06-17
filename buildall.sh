@@ -2,6 +2,12 @@
 
 START_TIME=$SECONDS
 
+echo '=== TESTS ==='
+TEST_RESULTS=$(flutter test)
+echo "Test results ${TEST_RESULTS}"
+# TODO exit if negative results
+exit
+
 # Android
 echo '=== BUILDING ANDROID ==='
 flutter build appbundle --release
@@ -10,7 +16,7 @@ flutter build appbundle --release
 # iOS
 echo '=== BUILDING iOS ==='
 flutter build ipa --release
-# RELEASE: open build/ios/archive/Runner.xcarchive
+# RELEASE: open build/ios/archive/Runner.xcarchive -> verify -> distribute
 
 # Web
 echo '=== BUILDING WEB ==='
