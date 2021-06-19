@@ -5,7 +5,7 @@ import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 
 class App extends StatelessWidget {
-  static const SCREENSHOT_MODE = false;
+  static const SCREENSHOT_MODE = true;
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,10 @@ class App extends StatelessWidget {
   }
 
   void initialize(BuildContext context) {
-    initializeScreenshotMode();
     GoalStore.resetGoalProgressIfNewDay();
-  }
-
-  void initializeScreenshotMode() {
-    // TODO set goals to right number
     if (SCREENSHOT_MODE) {
-    } else {}
+      GoalStore.setGoalProgress(8);
+      GoalStore.setGoal(25);
+    }
   }
 }

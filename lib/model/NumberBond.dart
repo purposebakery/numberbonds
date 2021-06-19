@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:numberbonds/pages/App.dart';
+
 class NumberBond {
   int first = -1;
   int second = -1;
@@ -16,6 +18,9 @@ class NumberBond {
   void base10() {
     result = 10;
     first = Random().nextInt(8) + 1;
+    if (App.SCREENSHOT_MODE) {
+      first = 4;
+    }
     second = result - first;
   }
 

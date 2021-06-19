@@ -24,6 +24,11 @@ class GoalStore {
     return prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
   }
 
+  static Future<void> setGoal(int goal) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(KEY_GOAL, goal);
+  }
+
   static Future<void> increaseGoal() async {
     final prefs = await SharedPreferences.getInstance();
     var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
@@ -48,6 +53,11 @@ class GoalStore {
     final prefs = await SharedPreferences.getInstance();
     var progress = prefs.getInt(KEY_GOAL_PROGRESS) ?? GOAL_PROGRESS_DEFAULT;
     prefs.setInt(KEY_GOAL_PROGRESS, ++progress);
+  }
+
+  static Future<void> setGoalProgress(int goalProgress) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(KEY_GOAL_PROGRESS, goalProgress);
   }
 
   static Future<void> resetGoalProgress() async {
