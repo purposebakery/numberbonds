@@ -11,6 +11,7 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
+import 'package:numberbonds/utils/VibrateUtils.dart';
 
 class NumberBondsPage extends StatefulWidget {
   NumberBondsPage({Key? key}) : super(key: key);
@@ -40,6 +41,13 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     GoalStore.getGoalState().then((value) => this.goal.value = value);
   }
 
+  void _resetWithDelayAndLockUi() {
+    this.waitingForReset = true;
+    DartUtils.delay(DartUtils.DURATION_1SEC, () {
+      _reset();
+    });
+  }
+
   void _reset() {
     setState(() {
       initializeValues();
@@ -65,14 +73,14 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         GoalStore.addGoalProgress();
 
         this.secondInput = secondInput;
-        this.waitingForReset = true;
-        DartUtils.delay(DartUtils.DURATION_1SEC, () {
-          _reset();
-        });
+        _resetWithDelayAndLockUi();
       } else {
         // Wrong answer
         StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.WRONG);
-        _reset();
+        VibrateUtils.vibrate();
+
+        this.secondInput = secondInput;
+        _resetWithDelayAndLockUi();
       }
     });
   }
@@ -146,7 +154,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       buildEquationNumber(context, "${numberbond.first}"),
       buildEquationNumber(context, "+"),
-      buildNumberPadNumber(context, resultNumberFormatted),
+      buildEquationResultNumber(context, resultNumberFormatted),
       buildEquationNumber(context, "="),
       buildEquationNumber(context, "${numberbond.result}"),
     ]);
@@ -202,18 +210,48 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }
 
   Widget buildNumberPadNumber(BuildContext context, String number) {
+    Color color;
+    if (waitingForReset && secondInput.toString() == number) {
+      if (secondInput == numberbond.second) {
+        color = SGColors.greenLight;
+      } else {
+        color = SGColors.redLight;
+      }
+    } else {
+      color = Colors.transparent;
+    }
     return Padding(
         padding: EdgeInsets.all(SGSizes.SPACE0_25),
-        child: OutlinedButton(
-            onPressed: () {
-              _setSecondInput(int.parse(number));
-            },
-            style: ButtonStyle(
-                minimumSize: MaterialStateProperty.resolveWith((_) => Size(numberPadItemWidth, numberPadItemWidth)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(numberPadItemWidth / 2.0),
-                    side: BorderSide(color: Colors.red)))),
+        child: AnimatedSwitcher(
+          duration: DartUtils.DURATION_LONG,
+          child: MaterialButton(
+              onPressed: () {
+                _setSecondInput(int.parse(number));
+              },
+              highlightElevation: 0.0,
+              elevation: 0.0,
+              minWidth: numberPadItemWidth,
+              height: numberPadItemWidth,
+              color: color,
+              shape: buildRoundedBorder(),
+              child: buildNumberField(context, number)),
+        ));
+  }
+
+  Widget buildEquationResultNumber(BuildContext context, String number) {
+    return Padding(
+        padding: EdgeInsets.all(SGSizes.SPACE0_25),
+        child: Container(
+            width: numberPadItemWidth,
+            height: numberPadItemWidth,
+            decoration: ShapeDecoration(shape: buildRoundedBorder()),
             child: buildNumberField(context, number)));
+  }
+
+  RoundedRectangleBorder buildRoundedBorder() {
+    return RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(numberPadItemWidth / 2.0),
+        side: BorderSide(color: SGColors.greyLight, width: 1.0));
   }
 
   Widget buildNumberField(BuildContext context, String number) {
