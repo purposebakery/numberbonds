@@ -5,8 +5,6 @@ START_TIME=$SECONDS
 echo '=== TESTS ==='
 TEST_RESULTS=$(flutter test)
 echo "Test results ${TEST_RESULTS}"
-# TODO exit if negative results
-exit
 
 # Android
 echo '=== BUILDING ANDROID ==='

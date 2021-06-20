@@ -4,7 +4,7 @@ A very simple app for kids to practice number bonds of 10 (e.g. 4+6=10, 8+2=10, 
 
 Play Store [here](https://play.google.com/store/apps/details?id=com.purposebakery.numberbonds) 
 
-App Store: Coming soon
+App Store: [here](https://apps.apple.com/us/app/free-education-number-bonds/id1571018744)
 
 Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrome at this point?)
 
@@ -13,7 +13,6 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 ### Must do
 
 - integrate test into "pipeline"
-- create positive and negative visual feedback for answers 
 
 ### Pipelines
 
