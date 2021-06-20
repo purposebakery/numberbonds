@@ -5,7 +5,7 @@ import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 
 class App extends StatelessWidget {
-  static const SCREENSHOT_MODE = true;
+  static const SCREENSHOT_MODE = false;
 
   @override
   Widget build(BuildContext context) {
