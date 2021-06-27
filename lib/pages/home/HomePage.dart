@@ -175,6 +175,11 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   openDonateUrl() {
-    launch("https://buymeacoffee.com/purposebakery");
+    SGAlertDialogParameters parameters = SGAlertDialogParameters();
+    parameters.isParentalGate = true;
+    parameters.title = "Parental gate";
+    parameters.message = "<a href=\"https://buymeacoffee.com/purposebakery\">Please</a> press the first word of this sentence to continue. This is a parental gate to make sure kids do not end up on the donation page. Thanks!";
+    parameters.positiveButton = "Ok";
+    SGAlertDialog.showSGAlertDialog(context, parameters);
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SGAlertDialog {
   static Future<void> showSGAlertDialog(BuildContext context, SGAlertDialogParameters parameters) async {
@@ -21,10 +23,31 @@ class SGAlertDialog {
   }
 
   static List<Widget> generateContent(BuildContext context, SGAlertDialogParameters parameters) {
+    if (parameters.isParentalGate) {
+      return createContentParentalGate(context, parameters);
+    } else {
+      return createContentText(context, parameters);
+    }
+  }
+
+  static List<Widget> createContentText(BuildContext context, SGAlertDialogParameters parameters) {
     var content = List<Widget>.empty(growable: true);
     if (parameters.message != null) {
       content.add(Text(parameters.message!));
     }
+    return content;
+  }
+
+  static List<Widget> createContentParentalGate(BuildContext context, SGAlertDialogParameters parameters) {
+    var map = {"a":Style(padding: EdgeInsets.all(0.0), color: Colors.black, textDecoration: TextDecoration.none, textDecorationColor: Colors.black, textDecorationStyle: TextDecorationStyle.solid)};
+    var html = Html(
+      style: map,
+      data: parameters.message,
+      onLinkTap: (url, context, attributes, element) => launch(url!),
+    );
+
+    var content = List<Widget>.empty(growable: true);
+    content.add(html);
     return content;
   }
 
@@ -63,6 +86,7 @@ class SGAlertDialog {
 
 class SGAlertDialogParameters {
   bool dismissible = true;
+  bool isParentalGate = false;
   String title = "";
   String? message;
   String? positiveButton;
