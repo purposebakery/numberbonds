@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/BaseState.dart';
@@ -30,13 +32,21 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Number bonds of 10'),
-        actions: [buildInfoActions()],
+        actions: buildActions(),
       ),
       body: buildBody(context),
     );
   }
 
-  Widget buildInfoActions() {
+  List<Widget> buildActions() {
+    if (Platform.isIOS) {
+      return [];
+    } else {
+      return [buildInfoAction()];
+    }
+  }
+
+  Widget buildInfoAction() {
     return IconButton(
       icon: Icon(Icons.info_outline, color: SGColors.textInverse,),
       onPressed: () {
@@ -164,7 +174,6 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   showInfoMessage() {
-
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Hi there!";
     parameters.message = "I'm Oliver. I believe in free education so I develop free educational apps (sounds logical right?). If you feel like supporting me, even only a small donation would absolutely make my day!";

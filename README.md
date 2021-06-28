@@ -12,7 +12,6 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 
 ### Must do
 
-- integrate test into "pipeline"
 
 ### Pipelines
 
