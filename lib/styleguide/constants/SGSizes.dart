@@ -24,6 +24,11 @@ class SGSizes {
   static double ICON_MEDIUM_D = ICON_MEDIUM; // ignore: non_constant_identifier_names
   static double ICON_LARGE_D = ICON_LARGE; // ignore: non_constant_identifier_names
 
+  static const double TEXT_SMALL = 13;
+  static const double TEXT_MEDIUM = 15;
+  static const double TEXT_LARGE = 17;
+
+
   static void initializeDynamic(BuildContext context) {
     var shortestSide = SystemUtils.getDisplayShortestSide(context);
     var dynamicScale = 1.0;

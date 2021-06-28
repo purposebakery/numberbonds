@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
+import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SGAlertDialog {
@@ -39,7 +40,11 @@ class SGAlertDialog {
   }
 
   static List<Widget> createContentParentalGate(BuildContext context, SGAlertDialogParameters parameters) {
-    var map = {"a":Style(padding: EdgeInsets.all(0.0), color: Colors.black, textDecoration: TextDecoration.none, textDecorationColor: Colors.black, textDecorationStyle: TextDecorationStyle.solid)};
+    var map = {
+      "a":Style(color: SGColors.text, textDecoration: TextDecoration.none),
+      "p":Style(color: SGColors.text, fontSize: FontSize(SGSizes.TEXT_MEDIUM)),
+      "*":Style(margin: EdgeInsets.all(0.0), padding: EdgeInsets.all(0.0), color: Colors.black, fontSize: FontSize(16))
+    };
     var html = Html(
       style: map,
       data: parameters.message,
