@@ -31,6 +31,7 @@ class _HomePage extends BaseState<HomePage> {
     reload();
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
         title: Text('Number bonds of 10'),
         actions: buildActions(),
       ),
@@ -39,11 +40,14 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   List<Widget> buildActions() {
-    if (Platform.isIOS) {
-      return [];
-    } else {
+    // TODO nothing to see here...
+    return [];
+    /*
+    if (Platform.isAndroid || Platform.isWindows) {
       return [buildInfoAction()];
-    }
+    } else {
+      return [];
+    }*/
   }
 
   Widget buildInfoAction() {

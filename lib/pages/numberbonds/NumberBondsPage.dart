@@ -95,6 +95,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     prebuild();
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
         title: Text('Number bonds of 10'),
       ),
       body: buildBody(context),

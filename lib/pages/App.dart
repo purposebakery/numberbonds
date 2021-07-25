@@ -12,7 +12,9 @@ class App extends StatelessWidget {
     initialize(context);
     return MaterialApp(
       title: 'Numberbonds',
-      theme: ThemeData(primarySwatch: SGColors.action),
+      theme: ThemeData(
+          primarySwatch: SGColors.action
+      ),
       home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
