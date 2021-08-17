@@ -12,7 +12,6 @@ import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
 import 'package:numberbonds/utils/SystemUtils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -50,6 +49,7 @@ class _HomePage extends BaseState<HomePage> {
     }*/
   }
 
+  /*
   Widget buildInfoAction() {
     return IconButton(
       icon: Icon(Icons.info_outline, color: SGColors.textInverse,),
@@ -57,7 +57,7 @@ class _HomePage extends BaseState<HomePage> {
         showInfoMessage();
       },
     );
-  }
+  }*/
 
   Widget buildBody(BuildContext context) {
     return Column(
@@ -177,6 +177,17 @@ class _HomePage extends BaseState<HomePage> {
     });
   }
 
+  /*
+  // FIXME removed Info action for now... Because apple.
+  Widget buildInfoAction() {
+    return IconButton(
+      icon: Icon(Icons.info_outline, color: SGColors.textInverse,),
+      onPressed: () {
+        showInfoMessage();
+      },
+    );
+  }
+
   showInfoMessage() {
     SGAlertDialogParameters parameters = SGAlertDialogParameters();
     parameters.title = "Hi there!";
@@ -195,5 +206,5 @@ class _HomePage extends BaseState<HomePage> {
     parameters.negativeButton = "Cancel";
     parameters.positiveButton = "Ok";
     SGAlertDialog.showSGAlertDialog(context, parameters);
-  }
+  }*/
 }
