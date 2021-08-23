@@ -12,19 +12,25 @@ class App extends StatelessWidget {
     initialize(context);
     return MaterialApp(
       title: 'Numberbonds',
-      theme: ThemeData(
-          primarySwatch: SGColors.action
-      ),
+      theme: ThemeData(primarySwatch: SGColors.action,
+          backgroundColor: SGColors.background),
       home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
 
   void initialize(BuildContext context) {
-    GoalStore.resetGoalProgressIfNewDay();
+    GoalStore.resetGoalProgressIfNewDay(GoalType.EASY);
+    GoalStore.resetGoalProgressIfNewDay(GoalType.NORMAL);
+    GoalStore.resetGoalProgressIfNewDay(GoalType.DIFFICULT);
     if (SCREENSHOT_MODE) {
-      GoalStore.setGoalProgress(8);
-      GoalStore.setGoal(25);
+      GoalStore.setGoalProgress(GoalType.EASY, 25);
+      GoalStore.setGoalProgress(GoalType.NORMAL, 10);
+      GoalStore.setGoalProgress(GoalType.DIFFICULT, 9);
+
+      GoalStore.setGoal(GoalType.EASY, 25);
+      GoalStore.setGoal(GoalType.NORMAL, 25);
+      GoalStore.setGoal(GoalType.DIFFICULT, 25);
     }
   }
 }

@@ -38,7 +38,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     this.secondInput = UNDEFINED;
     this.numberbond = NumberBond.base10WithPrevious(this.numberbond);
     this.waitingForReset = false;
-    GoalStore.getGoalState().then((value) => this.goal.value = value);
+    GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
   }
 
   void _resetWithDelayAndLockUi() {
@@ -70,7 +70,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       if (this.numberbond.isSecond(secondInput)) {
         // Right Answer
         StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
-        GoalStore.addGoalProgress();
+        GoalStore.addGoalProgressCurrent();
 
         this.secondInput = secondInput;
         _resetWithDelayAndLockUi();

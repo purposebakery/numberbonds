@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
@@ -11,6 +11,7 @@ import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
+import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 import 'package:numberbonds/utils/SystemUtils.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,37 +40,74 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   List<Widget> buildActions() {
-    // TODO nothing to see here...
-    return [];
-    /*
-    if (Platform.isAndroid || Platform.isWindows) {
-      return [buildInfoAction()];
-    } else {
-      return [];
-    }*/
+    return [buildDifficultyAction()];
+
   }
 
-  /*
-  Widget buildInfoAction() {
+  Widget buildDifficultyAction() {
     return IconButton(
-      icon: Icon(Icons.info_outline, color: SGColors.textInverse,),
+      icon: Icon(Icons.speed, color: SGColors.textInverse,),
       onPressed: () {
-        showInfoMessage();
+        showDifficultyMenu();
       },
     );
-  }*/
+  }
+
+  void showDifficultyMenu() {
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildDifficultyCell('Easy', 1.0.toDouble()),
+          buildDifficultyCell('Medium', 0.5.toDouble()),
+          buildDifficultyCell('Difficult', 0.0.toDouble()),
+        ],
+      )
+    );
+  }
+
+  Widget buildDifficultyCell(String cellText, double goalProgress) {
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left : SGSizes.SPACE2, right : SGSizes.SPACE2, top : SGSizes.SPACE1, bottom : SGSizes.SPACE1),
+          child: Row(
+              children: [
+                Expanded(child: Text(cellText, style: Theme.of(context).textTheme.subtitle1!.apply(color: SGColors.text))),
+                SGGoalProgress(progress: goalProgress, text: "", width: 100),
+              ]
+          ),
+        ),
+        Positioned.fill(
+            child: new Material(
+                color: Colors.transparent,
+                child: new InkWell(
+                  splashColor: SGColors.action.withAlpha(150),
+                  onTap: () {
+                    /*
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FlyerDetailPage(flyer.id)),
+                    );*/
+                  },
+                )
+            )
+        ),
+      ],
+    );
+  }
+
 
   Widget buildBody(BuildContext context) {
     return Column(
         verticalDirection: VerticalDirection.up,
-        //mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           buildStartButton(),
           buildGoalContainer(context),
         ]);
   }
-
 
   Widget buildStartButton() {
     return SGButtonRaised(
@@ -78,7 +116,6 @@ class _HomePage extends BaseState<HomePage> {
       onPressed: () => {navigateToNumberBondsPage()},
     );
   }
-
 
   Widget buildGoalContainer(BuildContext context) {
     return Expanded(
@@ -98,8 +135,8 @@ class _HomePage extends BaseState<HomePage> {
           text = "Daily goal\nreached!";
         }
         return Padding(
-            padding:
-                const EdgeInsets.only(left: SGSizes.SPACE1, right: SGSizes.SPACE1, bottom: SGSizes.SPACE2, top: SGSizes.SPACE2),
+            padding: const EdgeInsets.only(
+                left: SGSizes.SPACE1, right: SGSizes.SPACE1, bottom: SGSizes.SPACE2, top: SGSizes.SPACE2),
             child: SGGoalCircularProgress(
                 radius: SystemUtils.getDisplayShortestSideHalf(context),
                 progress: goalState.goalProgressPerunus,
@@ -157,27 +194,27 @@ class _HomePage extends BaseState<HomePage> {
     parameters.message = "Do you want to reset your daily goal?";
     parameters.positiveButton = "Yes";
     parameters.negativeButton = "Cancel";
-    parameters.positiveCallback = () => {GoalStore.resetGoalProgress(), reload()};
+    parameters.positiveCallback = () => {GoalStore.resetGoalProgressCurrent(), reload()};
     SGAlertDialog.showSGAlertDialog(context, parameters);
   }
 
   goalIncreaseButtonClicked(BuildContext context) {
-    GoalStore.increaseGoal();
+    GoalStore.increaseGoalCurrent();
     reload();
   }
 
   goalDecreaseButtonClicked(BuildContext context) {
-    GoalStore.decreaseGoal();
+    GoalStore.decreaseGoalCurrent();
     reload();
   }
 
   reload() {
     setState(() {
-      GoalStore.getGoalState().then((value) => this.goal.value = value);
+      GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
     });
   }
 
-  /*
+/*
   // FIXME removed Info action for now... Because apple.
   Widget buildInfoAction() {
     return IconButton(

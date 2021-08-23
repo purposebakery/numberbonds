@@ -21,6 +21,7 @@ dependencies:
   url_launcher: ^6.0.6
   vibration: ^1.7.4-nullsafety.0
   flutter_html: ^2.1.0
+  modal_bottom_sheet: ^2.0.0
 
 # dev dependencies
 dev_dependencies:

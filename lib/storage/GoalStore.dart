@@ -5,87 +5,128 @@ import 'package:numberbonds/utils/DateUtils.dart';
 import 'package:numberbonds/utils/ToastUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum GoalType {
+  EASY, NORMAL, DIFFICULT
+}
+
 class GoalStore {
   static const int GOAL_DEFAULT = 25;
   static const int GOAL_MAX = 1000;
   static const int GOAL_PROGRESS_DEFAULT = 0;
 
+  static const String KEY_GOAL_TYPE = "KEY_GOAL_TYPE";
   static const String KEY_GOAL = "KEY_GOAL";
   static const String KEY_GOAL_PROGRESS = "KEY_GOAL_PROGRESS";
   static const String KEY_GOAL_PROGRESS_DAY = "KEY_GOAL_PROGRESS_DAY";
 
-  static Future<void> storeGoal(int goal) async {
+  static Future<GoalType> getGoalType() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(KEY_GOAL, goal);
+    var keyGoalTypeString = prefs.getString(KEY_GOAL_TYPE) ?? GoalType.EASY.toString();
+    for(var type in GoalType.values) {
+      if (type.toString() == keyGoalTypeString) {
+        return type;
+      }
+    }
+    return GoalType.EASY;
   }
 
-  static Future<int> getGoal() async {
+  static Future<void> setGoalType(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
+    prefs.setString(KEY_GOAL_TYPE, type.toString());
   }
 
-  static Future<void> setGoal(int goal) async {
+  static Future<void> storeGoal(GoalType type, int goal) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(KEY_GOAL, goal);
+    prefs.setInt(KEY_GOAL + type.toString(), goal);
   }
 
-  static Future<void> increaseGoal() async {
+  static Future<int> getGoal(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
+    return prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
+  }
+
+  static Future<void> setGoal(GoalType type, int goal) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(KEY_GOAL + type.toString(), goal);
+  }
+
+  static Future<void> increaseGoalCurrent() async {
+    _increaseGoal(await getGoalType());
+  }
+
+  static Future<void> _increaseGoal(GoalType type) async {
+    final prefs = await SharedPreferences.getInstance();
+    var goal = prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
     if (goal >= GOAL_MAX) {
       ToastUtils.toastLong("I think that's enough . . .");
     } else {
-      prefs.setInt(KEY_GOAL, goal + 5);
+      prefs.setInt(KEY_GOAL + type.toString(), goal + 5);
     }
   }
 
-  static Future<void> decreaseGoal() async {
+  static Future<void> decreaseGoalCurrent() async {
+    _decreaseGoal(await getGoalType());
+  }
+
+  static Future<void> _decreaseGoal(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    var goal = prefs.getInt(KEY_GOAL) ?? GOAL_DEFAULT;
+    var goal = prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
     if (goal > 5) {
-      prefs.setInt(KEY_GOAL, goal - 5);
+      prefs.setInt(KEY_GOAL + type.toString(), goal - 5);
     } else {
       ToastUtils.toastLong("That's the minimum . . .");
     }
   }
 
-  static Future<void> addGoalProgress() async {
-    final prefs = await SharedPreferences.getInstance();
-    var progress = prefs.getInt(KEY_GOAL_PROGRESS) ?? GOAL_PROGRESS_DEFAULT;
-    prefs.setInt(KEY_GOAL_PROGRESS, ++progress);
+  static Future<void> addGoalProgressCurrent() async {
+    _addGoalProgress(await getGoalType());
   }
 
-  static Future<void> setGoalProgress(int goalProgress) async {
+  static Future<void> _addGoalProgress(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(KEY_GOAL_PROGRESS, goalProgress);
+    var progress = prefs.getInt(KEY_GOAL_PROGRESS + type.toString()) ?? GOAL_PROGRESS_DEFAULT;
+    prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), ++progress);
   }
 
-  static Future<void> resetGoalProgress() async {
+  static Future<void> setGoalProgress(GoalType type, int goalProgress) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(KEY_GOAL_PROGRESS, 0);
+    prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), goalProgress);
   }
 
-  static Future<void> resetGoalProgressIfNewDay() async {
+  static Future<void> resetGoalProgressCurrent() async {
+    _resetGoalProgress(await getGoalType());
+  }
+
+  static Future<void> _resetGoalProgress(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    var progressDay = prefs.getString(KEY_GOAL_PROGRESS_DAY);
+    prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), 0);
+  }
+
+  static Future<void> resetGoalProgressIfNewDay(GoalType type) async {
+    final prefs = await SharedPreferences.getInstance();
+    var progressDay = prefs.getString(KEY_GOAL_PROGRESS_DAY + type.toString());
     var today = DateUtils.getFormatted(DateTime.now());
     if (today != progressDay) {
       // Day has changed
-      resetGoalProgress();
+      _resetGoalProgress(type);
     } else {
       // Day is the same no need to do anything
     }
-    prefs.setString(KEY_GOAL_PROGRESS_DAY, today);
+    prefs.setString(KEY_GOAL_PROGRESS_DAY + type.toString(), today);
   }
 
-  static Future<int> getGoalProgress() async {
+  static Future<int> getGoalProgress(GoalType type) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(KEY_GOAL_PROGRESS) ?? GOAL_PROGRESS_DEFAULT;
+    return prefs.getInt(KEY_GOAL_PROGRESS + type.toString()) ?? GOAL_PROGRESS_DEFAULT;
   }
 
-  static Future<GoalState> getGoalState() async {
-    var goal = await getGoal();
-    var goalProgress = await getGoalProgress();
+  static Future<GoalState> getGoalStateCurrent() async {
+    return _getGoalState(await getGoalType());
+  }
+
+  static Future<GoalState> _getGoalState(GoalType type) async {
+    var goal = await getGoal(type);
+    var goalProgress = await getGoalProgress(type);
     var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1), 0).toDouble();
     var goalState = GoalState();
     goalState.goal = goal;
