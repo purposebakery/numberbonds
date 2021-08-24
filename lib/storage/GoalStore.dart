@@ -6,7 +6,7 @@ import 'package:numberbonds/utils/ToastUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum GoalType {
-  EASY, NORMAL, DIFFICULT
+  EASY, MEDIUM, DIFFICULT
 }
 
 class GoalStore {

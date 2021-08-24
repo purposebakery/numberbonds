@@ -12,6 +12,7 @@ import 'package:numberbonds/styleguide/constants/SGSizes.dart';
 import 'package:numberbonds/styleguide/dialogs/SGAlertDialog.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
+import 'package:numberbonds/utils/DartUtils.dart';
 import 'package:numberbonds/utils/SystemUtils.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends BaseState<HomePage> {
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
+  final ValueNotifier<GoalType> goalType = ValueNotifier<GoalType>(GoalType.EASY);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text('Number bonds of 10'),
+        title: Text("${goalType.value.toString()} Number bonds"),
         actions: buildActions(),
       ),
       body: buildBody(context),
@@ -41,12 +43,14 @@ class _HomePage extends BaseState<HomePage> {
 
   List<Widget> buildActions() {
     return [buildDifficultyAction()];
-
   }
 
   Widget buildDifficultyAction() {
     return IconButton(
-      icon: Icon(Icons.speed, color: SGColors.textInverse,),
+      icon: Icon(
+        Icons.speed,
+        color: SGColors.textInverse,
+      ),
       onPressed: () {
         showDifficultyMenu();
       },
@@ -55,29 +59,52 @@ class _HomePage extends BaseState<HomePage> {
 
   void showDifficultyMenu() {
     showMaterialModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildDifficultyCell('Easy', 1.0.toDouble()),
-          buildDifficultyCell('Medium', 0.5.toDouble()),
-          buildDifficultyCell('Difficult', 0.0.toDouble()),
-        ],
-      )
+        context: context,
+        builder: (context) => Column(
+
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(SGSizes.SPACE1),
+                child: Text("Change Difficulty", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
+              ),
+              Stack(
+                children: [buildDifficultySelection(), buildDifficultyCells()],
+              )
+            ]));
+  }
+
+  Widget buildDifficultyCells() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildDifficultyCell('Easy', GoalType.EASY, 1.0.toDouble()),
+        buildDifficultyCell('Medium', GoalType.MEDIUM, 0.5.toDouble()),
+        buildDifficultyCell('Difficult', GoalType.DIFFICULT, 0.0.toDouble()),
+      ],
     );
   }
 
-  Widget buildDifficultyCell(String cellText, double goalProgress) {
+  Widget buildDifficultySelection() {
+    return AnimatedPositioned(
+        top: 100,
+        child: Icon(
+          Icons.chevron_right,
+          color: SGColors.text,
+        ),
+        duration: DartUtils.DURATION_SHORT);
+  }
+
+  Widget buildDifficultyCell(String cellText, GoalType type, double goalProgress) {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left : SGSizes.SPACE2, right : SGSizes.SPACE2, top : SGSizes.SPACE1, bottom : SGSizes.SPACE1),
-          child: Row(
-              children: [
-                Expanded(child: Text(cellText, style: Theme.of(context).textTheme.subtitle1!.apply(color: SGColors.text))),
-                SGGoalProgress(progress: goalProgress, text: "", width: 100),
-              ]
-          ),
+          padding: const EdgeInsets.only(
+              left: SGSizes.SPACE2, right: SGSizes.SPACE2, top: SGSizes.SPACE1, bottom: SGSizes.SPACE1),
+          child: Row(children: [
+            Expanded(child: Text(cellText, style: Theme.of(context).textTheme.subtitle1!.apply(color: SGColors.text))),
+            SGGoalProgress(progress: goalProgress, text: "", width: 100),
+          ]),
         ),
         Positioned.fill(
             child: new Material(
@@ -85,19 +112,13 @@ class _HomePage extends BaseState<HomePage> {
                 child: new InkWell(
                   splashColor: SGColors.action.withAlpha(150),
                   onTap: () {
-                    /*
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FlyerDetailPage(flyer.id)),
-                    );*/
+                    GoalStore.setGoalType(type);
+                    reload();
                   },
-                )
-            )
-        ),
+                ))),
       ],
     );
   }
-
 
   Widget buildBody(BuildContext context) {
     return Column(
@@ -211,6 +232,7 @@ class _HomePage extends BaseState<HomePage> {
   reload() {
     setState(() {
       GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
+      GoalStore.getGoalType().then((value) => this.goalType.value = value);
     });
   }
 
