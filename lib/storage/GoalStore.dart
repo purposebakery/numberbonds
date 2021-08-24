@@ -136,10 +136,10 @@ class GoalStore {
   }
 
   static Future<GoalState> getGoalStateCurrent() async {
-    return _getGoalState(await getGoalType());
+    return getGoalState(await getGoalType());
   }
 
-  static Future<GoalState> _getGoalState(GoalType type) async {
+  static Future<GoalState> getGoalState(GoalType type) async {
     var goal = await getGoal(type);
     var goalProgress = await getGoalProgress(type);
     var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1), 0).toDouble();

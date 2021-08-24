@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -23,7 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends BaseState<HomePage> {
-  //final ValueNotifier<Map<GoalType, GoalState>> goalTypeState = ValueNotifier<Map<GoalType, GoalState>>(HashMap());
+  final ValueNotifier<Map<GoalType, GoalState>> goalTypeState = ValueNotifier<Map<GoalType, GoalState>>(HashMap());
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
   final ValueNotifier<GoalType> goalType = ValueNotifier<GoalType>(GoalType.EASY);
 
@@ -106,7 +108,7 @@ class _HomePage extends BaseState<HomePage> {
       selectedIcon = Text("");
     }
     var cellText = type.name;
-    double goalProgress = goal.value.goalProgressPerunus;
+    double goalProgress = goalTypeState.value[type]?.goalProgressPerunus ?? 0;
     return Stack(
       children: <Widget>[
         Padding(
@@ -249,6 +251,11 @@ class _HomePage extends BaseState<HomePage> {
     setState(() {
       GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
       GoalStore.getGoalType().then((value) => this.goalType.value = value);
+
+      this.goalTypeState.value.clear();
+      GoalType.values.forEach((type) {
+        GoalStore.getGoalState(type).then((value) => this.goalTypeState.value.putIfAbsent(type, () => value));
+      });
     });
   }
 
