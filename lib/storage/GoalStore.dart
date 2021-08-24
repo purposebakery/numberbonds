@@ -9,6 +9,21 @@ enum GoalType {
   EASY, MEDIUM, DIFFICULT
 }
 
+extension GoalTypeExtension on GoalType {
+  String get name {
+    switch (this) {
+      case GoalType.EASY:
+        return 'Easy';
+      case GoalType.MEDIUM:
+        return 'Medium';
+      case GoalType.DIFFICULT:
+        return 'Difficult';
+      default:
+        return '';
+    }
+  }
+}
+
 class GoalStore {
   static const int GOAL_DEFAULT = 25;
   static const int GOAL_MAX = 1000;

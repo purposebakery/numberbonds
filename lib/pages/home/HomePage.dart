@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends BaseState<HomePage> {
+  //final ValueNotifier<Map<GoalType, GoalState>> goalTypeState = ValueNotifier<Map<GoalType, GoalState>>(HashMap());
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
   final ValueNotifier<GoalType> goalType = ValueNotifier<GoalType>(GoalType.EASY);
 
@@ -34,7 +35,7 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text("${goalType.value.toString()} Number bonds"),
+        title: Text("${goalType.value.name} Number Bonds"),
         actions: buildActions(),
       ),
       body: buildBody(context),
@@ -61,7 +62,6 @@ class _HomePage extends BaseState<HomePage> {
     showMaterialModalBottomSheet(
         context: context,
         builder: (context) => Column(
-
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -69,7 +69,7 @@ class _HomePage extends BaseState<HomePage> {
                 child: Text("Change Difficulty", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
               ),
               Stack(
-                children: [buildDifficultySelection(), buildDifficultyCells()],
+                children: [buildDifficultyCells()],
               )
             ]));
   }
@@ -78,9 +78,9 @@ class _HomePage extends BaseState<HomePage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildDifficultyCell('Easy', GoalType.EASY, 1.0.toDouble()),
-        buildDifficultyCell('Medium', GoalType.MEDIUM, 0.5.toDouble()),
-        buildDifficultyCell('Difficult', GoalType.DIFFICULT, 0.0.toDouble()),
+        buildDifficultyCell(GoalType.EASY),
+        buildDifficultyCell(GoalType.MEDIUM),
+        buildDifficultyCell(GoalType.DIFFICULT),
       ],
     );
   }
@@ -95,13 +95,28 @@ class _HomePage extends BaseState<HomePage> {
         duration: DartUtils.DURATION_SHORT);
   }
 
-  Widget buildDifficultyCell(String cellText, GoalType type, double goalProgress) {
+  Widget buildDifficultyCell(GoalType type) {
+    Widget selectedIcon;
+    if (goalType.value == type) {
+      selectedIcon = Icon(
+        Icons.chevron_right,
+        color: SGColors.text,
+      );
+    } else {
+      selectedIcon = Text("");
+    }
+    var cellText = type.name;
+    double goalProgress = goal.value.goalProgressPerunus;
     return Stack(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(
-              left: SGSizes.SPACE2, right: SGSizes.SPACE2, top: SGSizes.SPACE1, bottom: SGSizes.SPACE1),
+              left: SGSizes.SPACE1, right: SGSizes.SPACE1, top: SGSizes.SPACE1, bottom: SGSizes.SPACE1),
           child: Row(children: [
+            Padding(
+              padding: const EdgeInsets.only(right: SGSizes.SPACE1),
+              child: Container(width: SGSizes.ICON_SMALL, height: SGSizes.ICON_SMALL, child: selectedIcon),
+            ),
             Expanded(child: Text(cellText, style: Theme.of(context).textTheme.subtitle1!.apply(color: SGColors.text))),
             SGGoalProgress(progress: goalProgress, text: "", width: 100),
           ]),
@@ -114,6 +129,7 @@ class _HomePage extends BaseState<HomePage> {
                   onTap: () {
                     GoalStore.setGoalType(type);
                     reload();
+                    Navigator.pop(context);
                   },
                 ))),
       ],
