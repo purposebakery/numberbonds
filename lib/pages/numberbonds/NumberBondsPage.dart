@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
-import 'package:numberbonds/model/NumberBondResult.dart';
+import 'package:numberbonds/model/NumberBondBase10.dart';
+import 'package:numberbonds/model/NumberBondElementType.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
-import 'package:numberbonds/storage/StatisticsStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
 import 'package:numberbonds/styleguide/constants/SGSizes.dart';
@@ -23,22 +23,41 @@ class NumberBondsPage extends StatefulWidget {
 class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   static const int UNDEFINED = -1;
 
-  int? secondInput;
+  bool initialised = false;
+  int? resultInput;
   late double numberPadItemWidth;
-  late NumberBond numberbond = NumberBond.empty();
+  late NumberBond numberbond;
   late bool waitingForReset;
+  late GoalType goalType;
 
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
 
   _NumberBondsPageState() {
-    initializeValues();
+    GoalStore.getGoalType().then((value) => initializeValues(value));
   }
 
-  void initializeValues() {
-    this.secondInput = UNDEFINED;
-    this.numberbond = NumberBond.base10WithPrevious(this.numberbond);
+  void initializeValues(GoalType type) {
+    this.goalType = type;
+    this.resultInput = UNDEFINED;
+    this.numberbond = createNumberBond();
+    this.numberbond.generateWithPrevious(this.numberbond);
     this.waitingForReset = false;
     GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
+
+    setState(() {
+      this.initialised = true;
+    });
+  }
+
+  NumberBond createNumberBond(){
+    switch (goalType) {
+      case GoalType.EASY:
+        return NumberBondBase10();
+      case GoalType.MEDIUM:
+        return NumberBondBase10(); // TODO create new NumberBond
+      case GoalType.DIFFICULT:
+        return NumberBondBase10(); // TODO create new NumberBond
+    }
   }
 
   void _resetWithDelayAndLockUi() {
@@ -50,13 +69,13 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void _reset() {
     setState(() {
-      initializeValues();
+      initializeValues(this.goalType);
     });
   }
 
-  void _setSecondInput(int secondInput) {
+  void _setResultInput(int resultInput) {
     // Same input. Ignore.
-    if (this.secondInput == secondInput) {
+    if (this.resultInput == resultInput) {
       return;
     }
 
@@ -67,19 +86,21 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
     // Set the state
     setState(() {
-      if (this.numberbond.isSecond(secondInput)) {
+      if (this.numberbond.isResult(resultInput)) {
         // Right Answer
-        StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
+        // TODO add statistic again
+        //StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
         GoalStore.addGoalProgressCurrent();
 
-        this.secondInput = secondInput;
+        this.resultInput = resultInput;
         _resetWithDelayAndLockUi();
       } else {
         // Wrong answer
-        StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.WRONG);
+        // TODO add statistic again
+        // StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.WRONG);
         VibrateUtils.vibrate();
 
-        this.secondInput = secondInput;
+        this.resultInput = resultInput;
         _resetWithDelayAndLockUi();
       }
     });
@@ -93,10 +114,15 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   Widget build(BuildContext context) {
     buildState(context);
     prebuild();
+
+    if (initialised.not) {
+      return Text("");
+    }
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text('Number bonds of 10'),
+        title: Text("${goalType.name} Number Bonds"),
       ),
       body: buildBody(context),
     );
@@ -148,17 +174,20 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   Widget buildEquation(BuildContext context) {
     String resultNumberFormatted = " ";
-    if (secondInput != UNDEFINED) {
-      resultNumberFormatted = secondInput.toString();
+    if (resultInput != UNDEFINED) {
+      resultNumberFormatted = resultInput.toString();
     }
 
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      buildEquationNumber(context, "${numberbond.first}"),
-      buildEquationNumber(context, "+"),
-      buildEquationResultNumber(context, resultNumberFormatted),
-      buildEquationNumber(context, "="),
-      buildEquationNumber(context, "${numberbond.result}"),
-    ]);
+    List<Widget> expressionWidgets = List.empty(growable: true);
+    numberbond.getElements().forEach((element) {
+      if (element.type == NumberBondElementType.EMPTY) {
+          expressionWidgets.add(buildEquationResultNumber(context, resultNumberFormatted));
+      } else {
+        expressionWidgets.add(buildEquationNumber(context, element.text ?? " "));
+      }
+    });
+
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: expressionWidgets);
   }
 
   Widget buildEquationCheckResponseIcon() {
@@ -212,8 +241,8 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   Widget buildNumberPadNumber(BuildContext context, String number) {
     Color color;
-    if (waitingForReset && secondInput.toString() == number) {
-      if (secondInput == numberbond.second) {
+    if (waitingForReset && resultInput.toString() == number) {
+      if (numberbond.isResult(resultInput)) {
         color = SGColors.greenLight;
       } else {
         color = SGColors.redLight;
@@ -227,7 +256,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
           duration: DartUtils.DURATION_LONG,
           child: MaterialButton(
               onPressed: () {
-                _setSecondInput(int.parse(number));
+                _setResultInput(int.parse(number));
               },
               highlightElevation: 0.0,
               elevation: 0.0,

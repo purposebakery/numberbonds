@@ -30,3 +30,9 @@ class DartUtils {
     delay(DURATION_LONG, function);
   }
 }
+
+extension BoolExtension on bool {
+  bool get not {
+    return !this;
+  }
+}
