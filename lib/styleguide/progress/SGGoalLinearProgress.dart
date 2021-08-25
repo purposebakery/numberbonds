@@ -7,9 +7,9 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 class SGGoalProgress extends StatelessWidget {
   final double progress;
   final String text;
-  final double width;
+  final double? width;
 
-  SGGoalProgress({Key? key, required this.progress, required this.text, this.width = 0}) : super(key: key);
+  SGGoalProgress({Key? key, required this.progress, required this.text, this.width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
