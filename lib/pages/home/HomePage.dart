@@ -16,6 +16,7 @@ import 'package:numberbonds/styleguide/progress/SGGoalCircularProgress.dart';
 import 'package:numberbonds/styleguide/progress/SGGoalLinearProgress.dart';
 import 'package:numberbonds/utils/DartUtils.dart';
 import 'package:numberbonds/utils/SystemUtils.dart';
+import 'package:numberbonds/utils/ToastUtils.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text("${goalType.value.name} Number Bonds"),
+        title: Text("Number Bonds"),
         actions: buildActions(),
       ),
       body: buildBody(context),
@@ -68,7 +69,7 @@ class _HomePage extends BaseState<HomePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(SGSizes.SPACE1),
-                child: Text("Change Difficulty", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
+                child: Text("Change difficulty", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
               ),
               Stack(
                 children: [buildDifficultyCells()],
@@ -132,6 +133,7 @@ class _HomePage extends BaseState<HomePage> {
                     GoalStore.setGoalType(type);
                     reload();
                     Navigator.pop(context);
+                    ToastUtils.toastLong("Difficulty changed to $cellText");
                   },
                 ))),
       ],

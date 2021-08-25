@@ -23,10 +23,10 @@ class ToastUtils {
     Fluttertoast.showToast(
         msg: message,
         toastLength: toastLength,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: length,
-        backgroundColor: SGColors.action,
-        textColor: SGColors.textInverse,
+        backgroundColor: SGColors.background,
+        textColor: SGColors.text,
         fontSize: 16.0);
   }
 }
