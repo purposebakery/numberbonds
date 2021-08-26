@@ -83,7 +83,6 @@ class _HomePage extends BaseState<HomePage> {
       children: [
         buildDifficultyCell(GoalType.EASY),
         buildDifficultyCell(GoalType.MEDIUM),
-        buildDifficultyCell(GoalType.DIFFICULT),
       ],
     );
   }

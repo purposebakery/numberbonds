@@ -22,15 +22,15 @@ class App extends StatelessWidget {
   void initialize(BuildContext context) {
     GoalStore.resetGoalProgressIfNewDay(GoalType.EASY);
     GoalStore.resetGoalProgressIfNewDay(GoalType.MEDIUM);
-    GoalStore.resetGoalProgressIfNewDay(GoalType.DIFFICULT);
+    //GoalStore.resetGoalProgressIfNewDay(GoalType.DIFFICULT);
     if (SCREENSHOT_MODE) {
       GoalStore.setGoalProgress(GoalType.EASY, 25);
       GoalStore.setGoalProgress(GoalType.MEDIUM, 10);
-      GoalStore.setGoalProgress(GoalType.DIFFICULT, 9);
+      //GoalStore.setGoalProgress(GoalType.DIFFICULT, 9);
 
       GoalStore.setGoal(GoalType.EASY, 25);
       GoalStore.setGoal(GoalType.MEDIUM, 25);
-      GoalStore.setGoal(GoalType.DIFFICULT, 25);
+      //GoalStore.setGoal(GoalType.DIFFICULT, 25);
     }
   }
 }

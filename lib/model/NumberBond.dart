@@ -1,9 +1,14 @@
 import 'package:numberbonds/model/NumberBondElement.dart';
+import 'package:numberbonds/model/NumberBondResult.dart';
 
 class NumberBond {
-  void generateWithPrevious(NumberBond previous) {}
+  int _first = -1;
+  int _second = -1;
+  int _result = -1;
 
-  bool isResult(int? result) {return false;}
+  NumberBond generateWithPrevious(NumberBond previous) { return NumberBond();}
+
+  NumberBondResult checkResult(int? result) {return NumberBondResult.CORRECT;}
 
   List<NumberBondElement> getElements() { return List.empty(); }
 }

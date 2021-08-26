@@ -5,6 +5,8 @@ import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
 import 'package:numberbonds/model/NumberBondBase10.dart';
 import 'package:numberbonds/model/NumberBondElementType.dart';
+import 'package:numberbonds/model/NumberBondResult.dart';
+import 'package:numberbonds/model/NumberBondTimesTable.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
@@ -30,19 +32,23 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   late bool waitingForReset;
   late GoalType goalType;
 
-  final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
+  final ValueNotifier<GoalState> goalState = ValueNotifier<GoalState>(GoalState());
 
   _NumberBondsPageState() {
-    GoalStore.getGoalType().then((value) => initializeValues(value));
+    GoalStore.getGoalType().then((goalType) => initializeValues(goalType));
   }
 
-  void initializeValues(GoalType type) {
-    this.goalType = type;
-    this.resultInput = UNDEFINED;
+  void initializeValues(GoalType goalType) {
+    this.goalType = goalType;
     this.numberbond = createNumberBond();
-    this.numberbond.generateWithPrevious(this.numberbond);
+    resetValues();
+  }
+
+  void resetValues() {
+    this.resultInput = UNDEFINED;
+    this.numberbond = createNumberBond().generateWithPrevious(this.numberbond);
     this.waitingForReset = false;
-    GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
+    GoalStore.getGoalStateCurrent().then((goalState) => this.goalState.value = goalState);
 
     setState(() {
       this.initialised = true;
@@ -54,9 +60,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       case GoalType.EASY:
         return NumberBondBase10();
       case GoalType.MEDIUM:
-        return NumberBondBase10(); // TODO create new NumberBond
-      case GoalType.DIFFICULT:
-        return NumberBondBase10(); // TODO create new NumberBond
+        return NumberBondTimesTable();
     }
   }
 
@@ -69,39 +73,39 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   void _reset() {
     setState(() {
-      initializeValues(this.goalType);
+      resetValues();
     });
   }
 
   void _setResultInput(int resultInput) {
-    // Same input. Ignore.
-    if (this.resultInput == resultInput) {
-      return;
-    }
-
     // We're waiting for a reset. Ignore
     if (this.waitingForReset) {
       return;
     }
 
+    if (this.resultInput != UNDEFINED && this.resultInput != null) {
+      resultInput = (this.resultInput ?? 0) * 10 + resultInput;
+    }
+
     // Set the state
     setState(() {
-      if (this.numberbond.isResult(resultInput)) {
-        // Right Answer
-        // TODO add statistic again
-        //StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.CORRECT);
-        GoalStore.addGoalProgressCurrent();
-
-        this.resultInput = resultInput;
-        _resetWithDelayAndLockUi();
-      } else {
-        // Wrong answer
-        // TODO add statistic again
-        // StatisticsStore.storeNumberBondResult(this.numberbond, NumberBondResult.WRONG);
-        VibrateUtils.vibrate();
-
-        this.resultInput = resultInput;
-        _resetWithDelayAndLockUi();
+      // TODO add statistic again
+      switch (this.numberbond.checkResult(resultInput)) {
+        case NumberBondResult.CORRECT:
+          GoalStore.addGoalProgressCurrent();
+          this.resultInput = resultInput;
+          _resetWithDelayAndLockUi();
+          break;
+        case NumberBondResult.PARTIAL:
+          setState(() {
+            this.resultInput = resultInput;
+          });
+          break;
+        case NumberBondResult.WRONG:
+          VibrateUtils.vibrate();
+          this.resultInput = resultInput;
+          _resetWithDelayAndLockUi();
+          break;
       }
     });
   }
@@ -112,6 +116,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print ("build");
     buildState(context);
     prebuild();
 
@@ -122,7 +127,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text("${goalType.name} Number Bonds"),
+        title: Text("${goalType.name}"),
       ),
       body: buildBody(context),
     );
@@ -158,7 +163,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
           child: SGGoalProgress(progress: goalState.goalProgressPerunus, text: text),
         );
       },
-      valueListenable: this.goal,
+      valueListenable: this.goalState,
     );
   }
 
@@ -181,7 +186,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     List<Widget> expressionWidgets = List.empty(growable: true);
     numberbond.getElements().forEach((element) {
       if (element.type == NumberBondElementType.EMPTY) {
-          expressionWidgets.add(buildEquationResultNumber(context, resultNumberFormatted));
+        expressionWidgets.add(buildEquationResultNumber(context, resultNumberFormatted));
       } else {
         expressionWidgets.add(buildEquationNumber(context, element.text ?? " "));
       }
@@ -208,48 +213,68 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }
 
   Widget buildNumberPad(BuildContext context) {
+    List<Widget> numberPadRows = List.empty(growable: true);
+
+    numberPadRows.add(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        buildNumberPadNumber(context, "1"),
+        buildNumberPadNumber(context, "2"),
+        buildNumberPadNumber(context, "3"),
+      ],
+    ));
+
+    numberPadRows.add(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        buildNumberPadNumber(context, "4"),
+        buildNumberPadNumber(context, "5"),
+        buildNumberPadNumber(context, "6"),
+      ],
+    ));
+
+    numberPadRows.add(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        buildNumberPadNumber(context, "7"),
+        buildNumberPadNumber(context, "8"),
+        buildNumberPadNumber(context, "9"),
+      ],
+    ));
+
+    if (goalType.requiresZero) {
+      numberPadRows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildNumberPadNumber(context, "0")
+        ],
+      ));
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: SGSizes.SPACE2_D),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildNumberPadNumber(context, "1"),
-            buildNumberPadNumber(context, "2"),
-            buildNumberPadNumber(context, "3"),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildNumberPadNumber(context, '4'),
-            buildNumberPadNumber(context, '5'),
-            buildNumberPadNumber(context, '6'),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildNumberPadNumber(context, '7'),
-            buildNumberPadNumber(context, '8'),
-            buildNumberPadNumber(context, '9'),
-          ],
-        ),
-      ]),
+      child: Column(children: numberPadRows),
     );
   }
 
   Widget buildNumberPadNumber(BuildContext context, String number) {
-    Color color;
-    if (waitingForReset && resultInput.toString() == number) {
-      if (numberbond.isResult(resultInput)) {
-        color = SGColors.greenLight;
-      } else {
-        color = SGColors.redLight;
+    Color color = Colors.transparent;
+    /*
+    if (waitingForReset && resultInput.toString().substring(resultInput.toString().length - 1) == number) {
+      switch (numberbond.checkResult(this.resultInput)) {
+        case NumberBondResult.CORRECT:
+          color = SGColors.greenLight;
+          break;
+        case NumberBondResult.WRONG:
+          color = SGColors.redLight;
+          break;
+        default:
+          color = Colors.transparent;
+          break;
       }
     } else {
       color = Colors.transparent;
-    }
+    }*/
     return Padding(
         padding: EdgeInsets.all(SGSizes.SPACE0_25),
         child: AnimatedSwitcher(
@@ -269,12 +294,31 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }
 
   Widget buildEquationResultNumber(BuildContext context, String number) {
+    Color color = Colors.transparent;
+    if (waitingForReset) {
+      switch (numberbond.checkResult(this.resultInput)) {
+        case NumberBondResult.CORRECT:
+          color = SGColors.greenLight;
+          break;
+        case NumberBondResult.WRONG:
+          color = SGColors.redLight;
+          break;
+        default:
+          color = Colors.transparent;
+          break;
+      }
+    } else {
+      color = Colors.transparent;
+    }
     return Padding(
         padding: EdgeInsets.all(SGSizes.SPACE0_25),
         child: Container(
             width: numberPadItemWidth,
             height: numberPadItemWidth,
-            decoration: ShapeDecoration(shape: buildRoundedBorder()),
+            decoration: ShapeDecoration(
+                color: color,
+                shape: buildRoundedBorder()
+            ),
             child: buildNumberField(context, number)));
   }
 

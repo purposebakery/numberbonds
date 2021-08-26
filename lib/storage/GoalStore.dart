@@ -6,20 +6,29 @@ import 'package:numberbonds/utils/ToastUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum GoalType {
-  EASY, MEDIUM, DIFFICULT
+  EASY, MEDIUM//, DIFFICULT
 }
 
 extension GoalTypeExtension on GoalType {
   String get name {
     switch (this) {
       case GoalType.EASY:
-        return 'Easy';
+        return 'Number bonds';
       case GoalType.MEDIUM:
-        return 'Medium';
-      case GoalType.DIFFICULT:
-        return 'Difficult';
+        return 'Times table';
       default:
-        return '';
+        throw Exception("Not implemented");
+    }
+  }
+
+  bool get requiresZero {
+    switch (this) {
+      case GoalType.EASY:
+        return false;
+      case GoalType.MEDIUM:
+        return true;
+      default:
+        throw Exception("Not implemented");
     }
   }
 }

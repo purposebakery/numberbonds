@@ -12,6 +12,7 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 
 ### Must do
 
+- Refactor GoalType to TaskType
 
 ### Pipelines
 

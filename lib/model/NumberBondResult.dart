@@ -1,1 +1,1 @@
-enum NumberBondResult { CORRECT, WRONG }
+enum NumberBondResult { CORRECT, WRONG, PARTIAL }
