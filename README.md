@@ -12,8 +12,6 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 
 ### Must do
 
-- Refactor GoalType to TaskType
-
 ### Pipelines
 
 - Android build + Release
@@ -29,7 +27,6 @@ Web: [here](https://purposebakery.github.io/numberbonds/#/) (only works on Chrom
 
 - optimize for tablet
 - add i18n
-- add wrong input visuals 
 - add more difficult number bond modes (x,y[1-9])
 - dark theme
 - add error count to home

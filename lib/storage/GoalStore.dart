@@ -1,84 +1,57 @@
 import 'dart:math';
 
 import 'package:numberbonds/model/GoalState.dart';
+import 'package:numberbonds/model/TaskType.dart';
 import 'package:numberbonds/utils/DateUtils.dart';
 import 'package:numberbonds/utils/ToastUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-enum GoalType {
-  EASY, MEDIUM//, DIFFICULT
-}
-
-extension GoalTypeExtension on GoalType {
-  String get name {
-    switch (this) {
-      case GoalType.EASY:
-        return 'Number bonds';
-      case GoalType.MEDIUM:
-        return 'Times table';
-      default:
-        throw Exception("Not implemented");
-    }
-  }
-
-  bool get requiresZero {
-    switch (this) {
-      case GoalType.EASY:
-        return false;
-      case GoalType.MEDIUM:
-        return true;
-      default:
-        throw Exception("Not implemented");
-    }
-  }
-}
 
 class GoalStore {
   static const int GOAL_DEFAULT = 25;
   static const int GOAL_MAX = 1000;
   static const int GOAL_PROGRESS_DEFAULT = 0;
 
-  static const String KEY_GOAL_TYPE = "KEY_GOAL_TYPE";
+  static const String KEY_TASK_TYPE = "KEY_TASK_TYPE";
   static const String KEY_GOAL = "KEY_GOAL";
   static const String KEY_GOAL_PROGRESS = "KEY_GOAL_PROGRESS";
   static const String KEY_GOAL_PROGRESS_DAY = "KEY_GOAL_PROGRESS_DAY";
 
-  static Future<GoalType> getGoalType() async {
+  static Future<TaskType> getTaskType() async {
     final prefs = await SharedPreferences.getInstance();
-    var keyGoalTypeString = prefs.getString(KEY_GOAL_TYPE) ?? GoalType.EASY.toString();
-    for(var type in GoalType.values) {
-      if (type.toString() == keyGoalTypeString) {
+    var key = prefs.getString(KEY_TASK_TYPE) ?? TaskType.NUMBERBONDS_OF_10.toString();
+    for(var type in TaskType.values) {
+      if (type.toString() == key) {
         return type;
       }
     }
-    return GoalType.EASY;
+    return TaskType.NUMBERBONDS_OF_10;
   }
 
-  static Future<void> setGoalType(GoalType type) async {
+  static Future<void> setTaskType(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(KEY_GOAL_TYPE, type.toString());
+    prefs.setString(KEY_TASK_TYPE, type.toString());
   }
 
-  static Future<void> storeGoal(GoalType type, int goal) async {
+  static Future<void> storeGoal(TaskType type, int goal) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(KEY_GOAL + type.toString(), goal);
   }
 
-  static Future<int> getGoal(GoalType type) async {
+  static Future<int> getGoal(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
   }
 
-  static Future<void> setGoal(GoalType type, int goal) async {
+  static Future<void> setGoal(TaskType type, int goal) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(KEY_GOAL + type.toString(), goal);
   }
 
   static Future<void> increaseGoalCurrent() async {
-    _increaseGoal(await getGoalType());
+    _increaseGoal(await getTaskType());
   }
 
-  static Future<void> _increaseGoal(GoalType type) async {
+  static Future<void> _increaseGoal(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     var goal = prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
     if (goal >= GOAL_MAX) {
@@ -89,10 +62,10 @@ class GoalStore {
   }
 
   static Future<void> decreaseGoalCurrent() async {
-    _decreaseGoal(await getGoalType());
+    _decreaseGoal(await getTaskType());
   }
 
-  static Future<void> _decreaseGoal(GoalType type) async {
+  static Future<void> _decreaseGoal(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     var goal = prefs.getInt(KEY_GOAL + type.toString()) ?? GOAL_DEFAULT;
     if (goal > 5) {
@@ -103,30 +76,30 @@ class GoalStore {
   }
 
   static Future<void> addGoalProgressCurrent() async {
-    _addGoalProgress(await getGoalType());
+    _addGoalProgress(await getTaskType());
   }
 
-  static Future<void> _addGoalProgress(GoalType type) async {
+  static Future<void> _addGoalProgress(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     var progress = prefs.getInt(KEY_GOAL_PROGRESS + type.toString()) ?? GOAL_PROGRESS_DEFAULT;
     prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), ++progress);
   }
 
-  static Future<void> setGoalProgress(GoalType type, int goalProgress) async {
+  static Future<void> setGoalProgress(TaskType type, int goalProgress) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), goalProgress);
   }
 
   static Future<void> resetGoalProgressCurrent() async {
-    _resetGoalProgress(await getGoalType());
+    _resetGoalProgress(await getTaskType());
   }
 
-  static Future<void> _resetGoalProgress(GoalType type) async {
+  static Future<void> _resetGoalProgress(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(KEY_GOAL_PROGRESS + type.toString(), 0);
   }
 
-  static Future<void> resetGoalProgressIfNewDay(GoalType type) async {
+  static Future<void> resetGoalProgressIfNewDay(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     var progressDay = prefs.getString(KEY_GOAL_PROGRESS_DAY + type.toString());
     var today = DateUtils.getFormatted(DateTime.now());
@@ -139,16 +112,16 @@ class GoalStore {
     prefs.setString(KEY_GOAL_PROGRESS_DAY + type.toString(), today);
   }
 
-  static Future<int> getGoalProgress(GoalType type) async {
+  static Future<int> getGoalProgress(TaskType type) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(KEY_GOAL_PROGRESS + type.toString()) ?? GOAL_PROGRESS_DEFAULT;
   }
 
   static Future<GoalState> getGoalStateCurrent() async {
-    return getGoalState(await getGoalType());
+    return getGoalState(await getTaskType());
   }
 
-  static Future<GoalState> getGoalState(GoalType type) async {
+  static Future<GoalState> getGoalState(TaskType type) async {
     var goal = await getGoal(type);
     var goalProgress = await getGoalProgress(type);
     var goalProgressPerunus = max(min(goalProgress.toDouble() / goal.toDouble(), 1), 0).toDouble();

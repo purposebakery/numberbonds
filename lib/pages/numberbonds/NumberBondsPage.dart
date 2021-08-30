@@ -7,6 +7,7 @@ import 'package:numberbonds/model/NumberBondBase10.dart';
 import 'package:numberbonds/model/NumberBondElementType.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
 import 'package:numberbonds/model/NumberBondTimesTable.dart';
+import 'package:numberbonds/model/TaskType.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
@@ -30,16 +31,16 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   late double numberPadItemWidth;
   late NumberBond numberbond;
   late bool waitingForReset;
-  late GoalType goalType;
+  late TaskType type;
 
   final ValueNotifier<GoalState> goalState = ValueNotifier<GoalState>(GoalState());
 
   _NumberBondsPageState() {
-    GoalStore.getGoalType().then((goalType) => initializeValues(goalType));
+    GoalStore.getTaskType().then((goalType) => initializeValues(goalType));
   }
 
-  void initializeValues(GoalType goalType) {
-    this.goalType = goalType;
+  void initializeValues(TaskType goalType) {
+    this.type = goalType;
     this.numberbond = createNumberBond();
     resetValues();
   }
@@ -56,10 +57,10 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
   }
 
   NumberBond createNumberBond(){
-    switch (goalType) {
-      case GoalType.EASY:
+    switch (type) {
+      case TaskType.NUMBERBONDS_OF_10:
         return NumberBondBase10();
-      case GoalType.MEDIUM:
+      case TaskType.TIMESTABLE_TO_10:
         return NumberBondTimesTable();
     }
   }
@@ -127,7 +128,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text("${goalType.name}"),
+        title: Text("${type.name}"),
       ),
       body: buildBody(context),
     );
@@ -242,7 +243,7 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
       ],
     ));
 
-    if (goalType.requiresZero) {
+    if (type.requiresZero) {
       numberPadRows.add(Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

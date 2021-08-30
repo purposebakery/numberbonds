@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:numberbonds/model/TaskType.dart';
 import 'package:numberbonds/pages/home/HomePage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/constants/SGColors.dart';
@@ -20,17 +21,15 @@ class App extends StatelessWidget {
   }
 
   void initialize(BuildContext context) {
-    GoalStore.resetGoalProgressIfNewDay(GoalType.EASY);
-    GoalStore.resetGoalProgressIfNewDay(GoalType.MEDIUM);
-    //GoalStore.resetGoalProgressIfNewDay(GoalType.DIFFICULT);
-    if (SCREENSHOT_MODE) {
-      GoalStore.setGoalProgress(GoalType.EASY, 25);
-      GoalStore.setGoalProgress(GoalType.MEDIUM, 10);
-      //GoalStore.setGoalProgress(GoalType.DIFFICULT, 9);
+    GoalStore.resetGoalProgressIfNewDay(TaskType.NUMBERBONDS_OF_10);
+    GoalStore.resetGoalProgressIfNewDay(TaskType.TIMESTABLE_TO_10);
 
-      GoalStore.setGoal(GoalType.EASY, 25);
-      GoalStore.setGoal(GoalType.MEDIUM, 25);
-      //GoalStore.setGoal(GoalType.DIFFICULT, 25);
+    if (SCREENSHOT_MODE) {
+      GoalStore.setGoalProgress(TaskType.NUMBERBONDS_OF_10, 25);
+      GoalStore.setGoalProgress(TaskType.TIMESTABLE_TO_10, 10);
+
+      GoalStore.setGoal(TaskType.NUMBERBONDS_OF_10, 25);
+      GoalStore.setGoal(TaskType.TIMESTABLE_TO_10, 25);
     }
   }
 }

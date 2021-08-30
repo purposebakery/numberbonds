@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
+import 'package:numberbonds/model/TaskType.dart';
 import 'package:numberbonds/pages/numberbonds/NumberBondsPage.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
 import 'package:numberbonds/styleguide/buttons/SGButtonRaised.dart';
@@ -26,9 +27,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends BaseState<HomePage> {
-  final ValueNotifier<Map<GoalType, GoalState>> goalTypeState = ValueNotifier<Map<GoalType, GoalState>>(HashMap());
+  final ValueNotifier<Map<TaskType, GoalState>> typeState = ValueNotifier<Map<TaskType, GoalState>>(HashMap());
   final ValueNotifier<GoalState> goal = ValueNotifier<GoalState>(GoalState());
-  final ValueNotifier<GoalType> goalType = ValueNotifier<GoalType>(GoalType.EASY);
+  final ValueNotifier<TaskType> currentType = ValueNotifier<TaskType>(TaskType.NUMBERBONDS_OF_10);
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +82,8 @@ class _HomePage extends BaseState<HomePage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildDifficultyCell(GoalType.EASY),
-        buildDifficultyCell(GoalType.MEDIUM),
+        buildDifficultyCell(TaskType.NUMBERBONDS_OF_10),
+        buildDifficultyCell(TaskType.TIMESTABLE_TO_10),
       ],
     );
   }
@@ -97,9 +98,9 @@ class _HomePage extends BaseState<HomePage> {
         duration: DartUtils.DURATION_SHORT);
   }
 
-  Widget buildDifficultyCell(GoalType type) {
+  Widget buildDifficultyCell(TaskType type) {
     Widget selectedIcon;
-    if (goalType.value == type) {
+    if (currentType.value == type) {
       selectedIcon = Icon(
         Icons.chevron_right,
         color: SGColors.text,
@@ -108,7 +109,7 @@ class _HomePage extends BaseState<HomePage> {
       selectedIcon = Text("");
     }
     var cellText = type.name;
-    double goalProgress = goalTypeState.value[type]?.goalProgressPerunus ?? 0;
+    double goalProgress = typeState.value[type]?.goalProgressPerunus ?? 0;
     return Stack(
       children: <Widget>[
         Padding(
@@ -129,7 +130,7 @@ class _HomePage extends BaseState<HomePage> {
                 child: new InkWell(
                   splashColor: SGColors.action.withAlpha(150),
                   onTap: () {
-                    GoalStore.setGoalType(type);
+                    GoalStore.setTaskType(type);
                     reload();
                     Navigator.pop(context);
                     ToastUtils.toastLong("Difficulty changed to $cellText");
@@ -251,11 +252,11 @@ class _HomePage extends BaseState<HomePage> {
   reload() {
     setState(() {
       GoalStore.getGoalStateCurrent().then((value) => this.goal.value = value);
-      GoalStore.getGoalType().then((value) => this.goalType.value = value);
+      GoalStore.getTaskType().then((value) => this.currentType.value = value);
 
-      this.goalTypeState.value.clear();
-      GoalType.values.forEach((type) {
-        GoalStore.getGoalState(type).then((value) => this.goalTypeState.value.putIfAbsent(type, () => value));
+      this.typeState.value.clear();
+      TaskType.values.forEach((type) {
+        GoalStore.getGoalState(type).then((value) => this.typeState.value.putIfAbsent(type, () => value));
       });
     });
   }
