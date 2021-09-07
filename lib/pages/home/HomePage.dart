@@ -70,7 +70,7 @@ class _HomePage extends BaseState<HomePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(SGSizes.SPACE1),
-                child: Text("Change difficulty", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
+                child: Text("Change mode", style: Theme.of(context).textTheme.headline6!.apply(color: SGColors.text)),
               ),
               Stack(
                 children: [buildDifficultyCells()],
@@ -133,7 +133,7 @@ class _HomePage extends BaseState<HomePage> {
                     GoalStore.setTaskType(type);
                     reload();
                     Navigator.pop(context);
-                    ToastUtils.toastLong("Difficulty changed to $cellText");
+                    ToastUtils.toastLong("Mode changed to $cellText");
                   },
                 ))),
       ],
