@@ -25,8 +25,8 @@ class App extends StatelessWidget {
     GoalStore.resetGoalProgressIfNewDay(TaskType.TIMESTABLE_TO_10);
 
     if (SCREENSHOT_MODE) {
-      GoalStore.setGoalProgress(TaskType.NUMBERBONDS_OF_10, 25);
-      GoalStore.setGoalProgress(TaskType.TIMESTABLE_TO_10, 10);
+      GoalStore.setGoalProgress(TaskType.NUMBERBONDS_OF_10, 10);
+      GoalStore.setGoalProgress(TaskType.TIMESTABLE_TO_10, 20);
 
       GoalStore.setGoal(TaskType.NUMBERBONDS_OF_10, 25);
       GoalStore.setGoal(TaskType.TIMESTABLE_TO_10, 25);
