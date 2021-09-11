@@ -39,7 +39,12 @@ class _HomePage extends BaseState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text("Number Bonds"),
+        title: ValueListenableBuilder<TaskType>(
+          builder: (BuildContext context, TaskType taskType, Widget? child) {
+            return Text("${taskType.name}");
+          },
+          valueListenable: this.currentType,
+        ),
         actions: buildActions(),
       ),
       body: buildBody(context),
@@ -79,12 +84,11 @@ class _HomePage extends BaseState<HomePage> {
   }
 
   Widget buildDifficultyCells() {
+    List<Widget> cells = List.empty(growable: true);
+    cells.addAll(TaskType.values.map((type) => buildDifficultyCell(type)));
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        buildDifficultyCell(TaskType.NUMBERBONDS_OF_10),
-        buildDifficultyCell(TaskType.TIMESTABLE_TO_10),
-      ],
+      children: cells
     );
   }
 

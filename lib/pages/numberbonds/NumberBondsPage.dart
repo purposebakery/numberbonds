@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:numberbonds/common/BaseState.dart';
 import 'package:numberbonds/model/GoalState.dart';
 import 'package:numberbonds/model/NumberBond.dart';
+import 'package:numberbonds/model/NumberBondAdditionSingleDigit.dart';
 import 'package:numberbonds/model/NumberBondBase10.dart';
 import 'package:numberbonds/model/NumberBondElementType.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
@@ -60,6 +61,8 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
     switch (type) {
       case TaskType.NUMBERBONDS_OF_10:
         return NumberBondBase10();
+      case TaskType.ADDITION_SINGLE_DIGIT:
+        return NumberBondAdditionSingleDigit();
       case TaskType.TIMESTABLE_TO_10:
         return NumberBondTimesTable();
     }
