@@ -7,6 +7,7 @@ import 'package:numberbonds/model/NumberBondAdditionSingleDigit.dart';
 import 'package:numberbonds/model/NumberBondBase10.dart';
 import 'package:numberbonds/model/NumberBondElementType.dart';
 import 'package:numberbonds/model/NumberBondResult.dart';
+import 'package:numberbonds/model/NumberBondSubtractionSingleDigit.dart';
 import 'package:numberbonds/model/NumberBondTimesTable.dart';
 import 'package:numberbonds/model/TaskType.dart';
 import 'package:numberbonds/storage/GoalStore.dart';
@@ -63,6 +64,8 @@ class _NumberBondsPageState extends BaseState<NumberBondsPage> {
         return NumberBondBase10();
       case TaskType.ADDITION_SINGLE_DIGIT:
         return NumberBondAdditionSingleDigit();
+      case TaskType.SUBTRACTION_SINGLE_DIGIT:
+        return NumberBondSubtractionSingleDigit();
       case TaskType.TIMESTABLE_TO_10:
         return NumberBondTimesTable();
     }

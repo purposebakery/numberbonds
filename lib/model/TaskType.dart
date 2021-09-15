@@ -1,5 +1,5 @@
 enum TaskType {
-  NUMBERBONDS_OF_10, ADDITION_SINGLE_DIGIT, TIMESTABLE_TO_10
+  NUMBERBONDS_OF_10, ADDITION_SINGLE_DIGIT, SUBTRACTION_SINGLE_DIGIT, TIMESTABLE_TO_10
 }
 
 extension TaskTypeExtension on TaskType {
@@ -9,6 +9,8 @@ extension TaskTypeExtension on TaskType {
         return 'Number bonds';
       case TaskType.ADDITION_SINGLE_DIGIT:
         return 'Addition';
+      case TaskType.SUBTRACTION_SINGLE_DIGIT:
+        return 'Subtraction';
       case TaskType.TIMESTABLE_TO_10:
         return 'Times table';
       default:
@@ -21,6 +23,8 @@ extension TaskTypeExtension on TaskType {
       case TaskType.NUMBERBONDS_OF_10:
         return false;
       case TaskType.ADDITION_SINGLE_DIGIT:
+        return true;
+      case TaskType.SUBTRACTION_SINGLE_DIGIT:
         return true;
       case TaskType.TIMESTABLE_TO_10:
         return true;
