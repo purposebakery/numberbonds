@@ -21,21 +21,21 @@ class App extends StatelessWidget {
   }
 
   void initialize(BuildContext context) {
-    GoalStore.resetGoalProgressIfNewDay(TaskType.NUMBERBONDS_OF_10);
-    GoalStore.resetGoalProgressIfNewDay(TaskType.ADDITION_SINGLE_DIGIT);
-    GoalStore.resetGoalProgressIfNewDay(TaskType.SUBTRACTION_SINGLE_DIGIT);
-    GoalStore.resetGoalProgressIfNewDay(TaskType.TIMESTABLE_TO_10);
-
     if (SCREENSHOT_MODE) {
-      GoalStore.setGoalProgress(TaskType.NUMBERBONDS_OF_10, 10);
-      GoalStore.setGoalProgress(TaskType.ADDITION_SINGLE_DIGIT, 5);
-      GoalStore.setGoalProgress(TaskType.SUBTRACTION_SINGLE_DIGIT, 0);
-      GoalStore.setGoalProgress(TaskType.TIMESTABLE_TO_10, 20);
+      GoalStore.setGoalProgress(TaskType.NUMBERBONDS_OF_10, 15);
+      GoalStore.setGoalProgress(TaskType.ADDITION_SINGLE_DIGIT, 20);
+      GoalStore.setGoalProgress(TaskType.SUBTRACTION_SINGLE_DIGIT, 10);
+      GoalStore.setGoalProgress(TaskType.TIMESTABLE_TO_10, 5);
 
       GoalStore.setGoal(TaskType.NUMBERBONDS_OF_10, 25);
       GoalStore.setGoal(TaskType.ADDITION_SINGLE_DIGIT, 25);
       GoalStore.setGoal(TaskType.SUBTRACTION_SINGLE_DIGIT, 25);
       GoalStore.setGoal(TaskType.TIMESTABLE_TO_10, 25);
+    } else {
+      GoalStore.resetGoalProgressIfNewDay(TaskType.NUMBERBONDS_OF_10);
+      GoalStore.resetGoalProgressIfNewDay(TaskType.ADDITION_SINGLE_DIGIT);
+      GoalStore.resetGoalProgressIfNewDay(TaskType.SUBTRACTION_SINGLE_DIGIT);
+      GoalStore.resetGoalProgressIfNewDay(TaskType.TIMESTABLE_TO_10);
     }
   }
 }
