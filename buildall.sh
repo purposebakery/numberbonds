@@ -6,8 +6,7 @@ echo '=== CLEAN ==='
 flutter clean
 
 echo '=== TESTS ==='
-TEST_RESULTS=$(flutter test)
-echo "Test results ${TEST_RESULTS}"
+flutter test
 
 # Android
 echo '=== BUILDING ANDROID ==='
